@@ -1,0 +1,65 @@
+/* frontend/src/components/Auth/SocialLoginButtons.css */
+
+.social-login-buttons {
+    margin-top: -30px;
+    text-align: center;
+}
+
+.social-separator {
+    margin-bottom: 15px;
+    color: #777;
+    font-size: 0.9em;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 280px; /* Wider for better appearance */
+    max-width: 90%; /* Responsive */
+    padding: 12px 20px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 8px; /* Slightly more rounded */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600; /* Bolder text */
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: all 0.2s ease-in-out;
+    text-decoration: none; /* In case it's used as a link */
+}
+
+.social-btn:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.social-btn img {
+    width: 22px; /* Slightly larger icon */
+    height: 22px;
+    margin-right: 12px;
+    background-color: white; /* For logos that might blend with background */
+    border-radius: 50%; /* Make circular if needed */
+    padding: 2px;
+}
+
+.google-btn {
+    background-color: #DB4437;
+    margin-bottom: 20px;
+
+}
+
+.google-btn:hover {
+    background-color: #C23321;
+}
+
+.discord-btn {
+    background-color: #5865F2;
+}
+
+.discord-btn:hover {
+    background-color: #4B56D7;
+}

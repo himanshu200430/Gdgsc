@@ -1,0 +1,473 @@
+@import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
+@font-face {
+  font-family: "Valorax";
+  src: url("../public/fonts/Valorax.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: "Jura", sans-serif;
+
+  /* overflow-x: hidden; */
+}
+body {
+  height: 400vh;
+  background-color: black;
+  color: white;
+
+  overflow-x: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  background-color: black;
+}
+.navbar {
+  animation-timeline: scroll();
+  animation-range: 0px 400px;
+  animation-name: nav;
+}
+
+@keyframes nav {
+  0% {
+    background: transparent;
+  }
+  100% {
+    background-color: black;
+  }
+}
+.home-image {
+  animation-timeline: scroll();
+  animation-name: zoomImage;
+  z-index: -1;
+}
+@keyframes zoomImage {
+  0% {
+    transform: scale(1);
+    /* scale: 1; */
+  }
+  /* 50%{
+    transform: scale(1.2);
+  } */
+  100% {
+    /* transform: scale(1.6); */
+    width: 200vw;
+  }
+}
+
+.home-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, black, transparent, transparent);
+  z-index: 1;
+}
+.home-image::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, black 4px, transparent, transparent);
+  z-index: 10000;
+}
+.home-text {
+  font-family: "Valorax", sans-serif;
+  width: 80vw;
+  /* background-color:red; */
+  height: 100vh;
+  position: absolute;
+  padding-left: 50px;
+  z-index: 100;
+  font-size: "3.2em";
+}
+
+@media (max-width: 442px) {
+  .home-text {
+    font-size: 1em;
+  }
+}
+@media (max-width: 400px) {
+  .home-text {
+    font-size: 0.5em;
+  }
+}
+.home-text span {
+  font-size: 1.8em;
+  font-weight: 700;
+}
+.home-text p {
+  font-family: "arial", sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+.button {
+  position: relative;
+  width: 11em;
+  height: 4em;
+  outline: none;
+  transition: 0.1s;
+  background-color: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: bold;
+  color: #ddebf0;
+}
+
+/* #clip {
+  --color: gold;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border: 5px double var(--color);
+  box-shadow: inset 0px 0px 15px #195480;
+  -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+} */
+
+/* .arrow {
+  position: absolute;
+  transition: 0.2s;
+  background-color: gold;
+  top: 35%;
+  width: 11%;
+  height: 30%;
+} */
+
+/* #leftArrow {
+  left: -24%;
+  -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
+} */
+
+/* #rightArrow {
+  -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%);
+  left: 100%;
+} */
+
+/* .button:hover #rightArrow {
+  background-color: #27c39f;
+  left: -22%;
+  animation: 0.6s ease-in-out both infinite alternate rightArrow8;
+}
+
+.button:hover #leftArrow {
+  background-color: #27c39f;
+  left: 97%;
+  animation: 0.6s ease-in-out both infinite alternate leftArrow8;
+} */
+
+/* .corner {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  background-color: gold;
+  box-shadow: inset 1px 1px 8px gold;
+  transform: scale(1) rotate(45deg);
+  transition: 0.2s;
+} */
+
+/* #rightTop {
+  top: -1.98em;
+  left: 91%;
+} */
+
+/* #leftTop {
+  top: -1.96em;
+  left: -3.0em;
+} */
+
+/* #leftBottom {
+  top: 2.10em;
+  left: -2.15em;
+} */
+
+/* #rightBottom {
+  top: 45%;
+  left: 88%;
+} */
+
+/* .button:hover #leftTop {
+  animation: 0.1s ease-in-out 0.05s both changeColor8,
+  0.2s linear 0.4s both lightEffect8;
+}
+
+.button:hover #rightTop {
+  animation: 0.1s ease-in-out 0.15s both changeColor8,
+  0.2s linear 0.4s both lightEffect8;
+}
+
+.button:hover #rightBottom {
+  animation: 0.1s ease-in-out 0.25s both changeColor8,
+  0.2s linear 0.4s both lightEffect8;
+}
+
+.button:hover #leftBottom {
+  animation: 0.1s ease-in-out 0.35s both changeColor8,
+  0.2s linear 0.4s both lightEffect8;
+}
+
+.button:hover .corner {
+  transform: scale(1.25) rotate(45deg);
+}
+
+.button:hover #clip {
+  animation: 0.2s ease-in-out 0.55s both greenLight8;
+  --color: #27c39f;
+} */
+
+@keyframes changeColor8 {
+  from {
+    background-color: gold;
+  }
+
+  to {
+    background-color: #27c39f;
+  }
+}
+
+@keyframes lightEffect8 {
+  from {
+    box-shadow: 1px 1px 5px gold;
+  }
+
+  to {
+    box-shadow: 0 0 2px #27c39f;
+  }
+}
+
+@keyframes greenLight8 {
+  from {
+  }
+
+  to {
+    box-shadow: inset 0px 0px 32px #27c39f;
+  }
+}
+
+@keyframes leftArrow8 {
+  from {
+    transform: translate(0px);
+  }
+
+  to {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes rightArrow8 {
+  from {
+    transform: translate(0px);
+  }
+
+  to {
+    transform: translateX(-10px);
+  }
+}
+
+ul li a {
+  text-decoration: none;
+  color: white;
+  font-family: "arial", sans-serif;
+  font-size: 1em;
+  font-weight: 700;
+}
+ul li:hover {
+  color: gold;
+}
+ul li a:hover {
+  color: gold;
+}
+
+.discordImage {
+  width: 40vw;
+  z-index: 100000;
+  animation-name: discordImage;
+  animation-duration: 1ms;
+  animation-timeline: view(block 50% 0%);
+}
+@keyframes discordImage {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.discord {
+  padding: 60px;
+  /* padding-right: 120px; */
+  align-items: center;
+}
+
+.about {
+  gap: 80px;
+  margin-top: 12px;
+}
+@media (max-width: 850px) {
+  .about {
+    flex-direction: column-reverse;
+    gap: 10px;
+    margin-top: 40px;
+  }
+  .about div:nth-child(2) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .about div:nth-child(2) img {
+    width: 80%;
+    align-self: center;
+  }
+  .discord {
+    display: block;
+    gap: 0px !important;
+  }
+
+  .discord .discordImage {
+    display: none;
+  }
+  .discord .discordtext {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+h1 {
+  font-family: "Valorax", sans-serif;
+  font-size: 2.5em;
+  font-weight: 700;
+  color: gold;
+}
+/* p{
+  font-family: 'arial', sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  color: white;
+  padding-top: 20px;
+  padding-bottom: 50px;
+} */
+
+/* Contest Container */
+.contest-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  /* max-width: 1200px; */
+  width: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Contest Cards */
+.contest-card {
+  background: linear-gradient(
+      145deg,
+      rgba(205, 127, 50, 0.1) 0%,
+      rgba(255, 215, 0, 0.2) 100%
+    ),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23FFD700" opacity="0.05" d="M20,20 L80,20 L80,80 L20,80 Z" stroke="%23FFD700" stroke-width="2" stroke-opacity="0.2"/></svg>');
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 10px;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-width: 280px;
+}
+
+.contest-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ffd700, transparent);
+}
+
+.contest-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.1) 0%,
+    transparent 70%
+  );
+  transform: rotate(30deg);
+  z-index: -1;
+}
+
+.contest-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2);
+}
+
+/* Text Styles */
+.contest-card h2 {
+  font-family: "Cinzel Decorative", cursive;
+  color: #ffd700;
+  margin-top: 0;
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  position: relative;
+  display: inline-block;
+}
+
+.contest-card h2::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #ffd700, transparent);
+}
+
+.contest-card p {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Icons */
+.icon {
+  font-size: 2.5rem;
+  text-align: right;
+  opacity: 0.7;
+  margin-top: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .contest-container {
+    grid-template-columns: 1fr;
+  }
+
+  .contest-card {
+    padding: 20px;
+  }
+}

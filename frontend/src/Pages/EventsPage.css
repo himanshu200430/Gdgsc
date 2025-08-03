@@ -1,0 +1,175 @@
+/* frontend/src/pages/EventsPage.css */
+
+/* Add these new styles */
+.event-image {
+  max-width: 100%; /* Ensure image doesn't overflow card */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 4px; /* Slightly rounded corners */
+  margin-bottom: 15px; /* Space below image */
+  display: block; /* Ensures it takes up its own line */
+  object-fit: cover; /* Covers the area, might crop */
+  max-height: 200px; /* Limit height to keep cards uniform */
+}
+
+/* Existing styles below (ensure they are present or merge them) */
+.events-container {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 2rem;
+  background: 
+    radial-gradient(circle at 25% 25%, #000000 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, #000000 0%, transparent 50%),
+    linear-gradient(135deg, #0a0a0a 0%, #000000 50%, #000a1a 100%);
+  position: relative;
+  overflow-x: hidden;
+  font-family: 'Orbitron', monospace;
+  box-sizing: border-box;
+}
+
+.registration-feedback {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #d4edda; /* Light green */
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb;
+}
+
+.error-message {
+  background-color: #f8d7da; /* Light red */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb;
+}
+
+.events-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.event-card {
+  background-color: #727f9b;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-card h2 {
+  color: #61dafb;
+  margin-top: 0;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.event-description {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.event-card p {
+  margin-bottom: 8px;
+  color: #e0e0e0;
+}
+
+.event-card strong {
+  color: #fff;
+}
+
+.register-button {
+  background-color: #4caf50; /* Green */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.register-button:hover {
+  background-color: #45a049;
+}
+
+.event-inactive-message {
+  color: #f0f0f0;
+  background-color: #000000; /* Grey */
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: 15px;
+}
+
+/* Aesthetic updates */
+.events-container h1 {
+  color: #ffce00; /* Vibrant yellow title */
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+/* Modify event card for yellow-red palette */
+.event-card {
+  background: linear-gradient(145deg,  #1f1b2e,#000000); /* Red-yellow blend */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: #fff3cd;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.event-card h2 {
+  color: #fff176;
+  margin-bottom: 12px;
+}
+
+.event-description {
+  font-size: 0.95em;
+  color: #ffeaa7;
+  margin-bottom: 12px;
+}
+
+.register-button {
+  background: linear-gradient(90deg, #000000, #f7382a);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease;
+}
+
+.register-button:hover {
+  background: linear-gradient(90deg, #ff1616, #000000);
+}
+
+.event-inactive-message {
+  background-color: #bdbdbd;
+  color: #212121;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: 15px;
+  font-weight: bold;
+}
+

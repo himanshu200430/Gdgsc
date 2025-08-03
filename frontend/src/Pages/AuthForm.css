@@ -1,0 +1,113 @@
+/* frontend/src/pages/AuthForm.css */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top for longer forms */
+    min-height: calc(100vh - 120px); /* Adjust for header/footer height */
+    padding: 40px 20px;
+    /* background-color: #000; Light background */
+    color: #fff !important;
+}
+
+.auth-form-card {
+    background-color: transparent;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* Max width for readability */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.auth-form-card h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Ensures padding doesn't increase width */
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.auth-submit-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: rgb(97, 49, 97);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 15px;
+}
+
+.auth-submit-btn:hover {
+    background-color: #5f2561;
+    transform: translateY(-1px);
+}
+
+.error-message {
+    color: #d32f2f; /* Red */
+    background-color: #ffebee;
+    border: 1px solid #ef9a9a;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.success-message {
+    color: #388e3c; /* Green */
+    background-color: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.auth-link-text {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.95em;
+    color: white;
+}
+
+.auth-link-text a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-link-text a:hover {
+    text-decoration: underline;
+}

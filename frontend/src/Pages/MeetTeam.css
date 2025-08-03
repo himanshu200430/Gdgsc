@@ -1,0 +1,374 @@
+/* Base styles with gaming theme */
+.meet-team-section {
+  position: relative;
+  padding: 5rem 2rem;
+  text-align: center;
+  background-color: #000000;
+  overflow: hidden;
+  font-family: "Rajdhani", "Arial Narrow", Arial, sans-serif;
+}
+
+.content-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.section-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  position: relative;
+}
+
+.title-text {
+  position: relative;
+  background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.title-underline {
+  width: 200px;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493);
+  margin: 0 auto 2.5rem;
+  border-radius: 4px;
+}
+
+.section-description {
+  margin: 1.5rem auto 3rem;
+  color: #ccc;
+  max-width: 700px;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+/* Team section styles */
+.team-section {
+  margin-top: 4rem;
+  position: relative;
+}
+
+.team-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.team-title-text {
+  position: relative;
+  z-index: 10;
+  padding: 0 1.5rem;
+  display: inline-block;
+}
+
+.team-title-underline {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.team-members {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+/* Member card styles */
+.member-card {
+  position: relative;
+  padding: 2rem;
+  width: 280px;
+  height: 380px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.member-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Team color classes */
+.team-gold {
+  background: linear-gradient(135deg, #ffe23c 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-gold .member-name {
+  color: #000000;
+}
+.team-gold .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-white {
+  background: linear-gradient(135deg, #ff3381 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-white .member-name {
+  color: #000000;
+}
+.team-white .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-blue {
+  background: linear-gradient(135deg, #47cccc 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-blue .member-name {
+  color: #000000;
+}
+.team-blue .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-purple {
+  background: linear-gradient(135deg, #3c70ff 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-purple .member-name {
+  color: #000000;
+}
+.team-purple .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-red {
+  background: linear-gradient(135deg, #98ff38 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-red .member-name {
+  color: #000000;
+}
+.team-red .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-green {
+  background: linear-gradient(135deg, #ffac11 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-green .member-name {
+  color: #000000;
+}
+.team-green .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-cyan {
+  background: linear-gradient(135deg, #f717ff 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-cyan .member-name {
+  color: #000000;
+}
+.team-cyan .member-role {
+  color: rgba(12, 12, 12, 0.8);
+}
+
+.team-pink {
+  background: linear-gradient(135deg, #c9ff08 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-pink .member-name {
+  color: #000000;
+}
+.team-pink .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.team-orange {
+  background: linear-gradient(135deg, #2bcafa 0%, #1a1a22 100%);
+  border: 2px solid #000000;
+}
+.team-orange .member-name {
+  color: #000000;
+}
+.team-orange .member-role {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/* Member image styles */
+.member-image-container {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  border-radius: 12px;
+  overflow: visible;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.member-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Member info styles */
+.member-info {
+  text-align: center;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.member-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.member-role {
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* Social links styles */
+.member-social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: auto;
+}
+
+.social-link {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-3px) scale(1.1);
+}
+
+.social-link.linkedin:hover {
+  color: #0077b5;
+}
+
+.social-link.instagram:hover {
+  color: #e1306c;
+}
+
+.social-link.github:hover {
+  color: #fff;
+}
+
+.social-icon {
+  font-size: 1.3rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .team-members {
+    gap: 2rem;
+  }
+
+  .member-card {
+    width: 240px;
+    height: 340px;
+  }
+
+  .member-image-container {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  .team-members {
+    gap: 1.5rem;
+  }
+
+  .member-card {
+    width: 220px;
+    height: 320px;
+    padding: 1.5rem;
+  }
+
+  .member-image-container {
+    width: 140px;
+    height: 140px;
+  }
+
+  .member-name {
+    font-size: 1.3rem;
+  }
+
+  .member-role {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-members {
+    gap: 1.2rem;
+  }
+
+  .member-card {
+    width: 160px;
+    height: 260px;
+    padding: 1rem;
+  }
+
+  .member-image-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .member-name {
+    font-size: 1.1rem;
+  }
+
+  .member-role {
+    font-size: 0.9rem;
+  }
+
+  .social-icon {
+    font-size: 1rem;
+  }
+}
