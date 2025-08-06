@@ -10,9 +10,9 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const { login, isAuthenticated, loading } = useAuth(); // Destructure isAuthenticated
+    const { login, isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation(); // To check query parameters
+    const location = useLocation();
 
     // Redirect if already authenticated
     useEffect(() => {
@@ -21,38 +21,35 @@ const LoginPage = () => {
         }
     }, [isAuthenticated, loading, navigate]);
 
-    // Check for messages from redirects (e.g., session expired)
+    // Check for messages from redirects
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         if (params.get('session_expired')) {
             setError('Your session has expired. Please log in again.');
         } else if (params.get('error')) {
-            setError(params.get('error').replace(/_/g, ' ')); // Convert underscores to spaces
+            setError(params.get('error').replace(/_/g, ' '));
         }
     }, [location.search]);
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccessMessage(''); // Clear previous messages
+        setSuccessMessage('');
         const result = await login(email, password);
         if (result.success) {
             setSuccessMessage('Login successful! Redirecting...');
-            // Navigate is handled by the useEffect above
         } else {
             setError(result.error || 'Login failed. Please check your credentials.');
         }
     };
 
     if (loading) {
-        return <div className="auth-container">Loading...</div>; // Show loading state
+        return <div className="auth-container">Loading...</div>;
     }
 
     return (
         <FormBg>
-        <div style={{width:"fit-content",position:'relative',left:'50%',transform:'translateX(-50%)'}}>
-            <div className="auth-form-card" style={{zIndex:"10000"}}>
+            <div className="auth-form-card">
                 <h2>Login</h2>
                 {error && <p className="error-message">{error}</p>}
                 {successMessage && <p className="success-message">{successMessage}</p>}
@@ -86,9 +83,9 @@ const LoginPage = () => {
                 </p>
                 <SocialLoginButtons />
             </div>
-        </div>
         </FormBg>
     );
 };
 
 export default LoginPage;
+

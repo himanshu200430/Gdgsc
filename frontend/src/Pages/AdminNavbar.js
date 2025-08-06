@@ -183,6 +183,7 @@ const UserDetails = () => {
 
 const ParticipationDetails = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedEventTypes, setSelectedEventTypes] = useState([]);
   const [participations, setParticipations] = useState([
     {
       id: 1,
@@ -192,29 +193,163 @@ const ParticipationDetails = () => {
       year: "3rd",
       exp: 50,
       events: "Hackathon, Coding Competition",
+      eventType: "Hackathon",
       level: 10,
     },
-    // Add more sample participations as needed
+    {
+      id: 2,
+      name: "Jane Smith",
+      enrollmentNo: "EN002",
+      branch: "ECE",
+      year: "2nd",
+      exp: 75,
+      events: "UI/UX Workshop, Design Challenge",
+      eventType: "Designathon",
+      level: 12,
+    },
+    {
+      id: 3,
+      name: "Mike Johnson",
+      enrollmentNo: "EN003",
+      branch: "CSE",
+      year: "4th",
+      exp: 100,
+      events: "Gaming Championship",
+      eventType: "Game Tournament",
+      level: 15,
+    },
+    {
+      id: 4,
+      name: "Sarah Wilson",
+      enrollmentNo: "EN004",
+      branch: "IT",
+      year: "3rd",
+      exp: 85,
+      events: "Game Development Marathon, Unity Workshop",
+      eventType: "Gameathon",
+      level: 13,
+    },
+    {
+      id: 5,
+      name: "Alex Chen",
+      enrollmentNo: "EN005",
+      branch: "CSE",
+      year: "2nd",
+      exp: 90,
+      events: "48-Hour Game Jam, Indie Game Challenge",
+      eventType: "Gameathon",
+      level: 14,
+    },
+    {
+      id: 6,
+      name: "Emily Davis",
+      enrollmentNo: "EN006",
+      branch: "ECE",
+      year: "4th",
+      exp: 60,
+      events: "AI in Tech Talk, Machine Learning Seminar",
+      eventType: "Speaker Session",
+      level: 11,
+    },
+    {
+      id: 7,
+      name: "David Kumar",
+      enrollmentNo: "EN007",
+      branch: "IT",
+      year: "3rd",
+      exp: 70,
+      events: "Startup Founder Talk, Entrepreneurship Session",
+      eventType: "Speaker Session",
+      level: 12,
+    },
+    {
+      id: 8,
+      name: "Akp",
+      enrollmentNo: "EN004",
+      branch: "IT",
+      year: "3rd",
+      exp: 75,
+      events: "Game Development Marathon, Unity Workshop",
+      eventType: "Game Tournament",
+      level: 13,
+    },
   ]);
 
-  const filteredParticipations = participations.filter(
-    (participation) =>
+  const eventTypes = ["Hackathon", "Designathon", "Gameathon", "Game Tournament", "Speaker Session"];
+
+  const handleEventTypeChange = (eventType) => {
+    setSelectedEventTypes(prev => 
+      prev.includes(eventType)
+        ? prev.filter(type => type !== eventType)
+        : [...prev, eventType]
+    );
+  };
+
+  const filteredParticipations = participations.filter((participation) => {
+    const matchesSearch = 
       participation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      participation.enrollmentNo
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-  );
+      participation.enrollmentNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      participation.events.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesFilter = selectedEventTypes.length === 0 || 
+      selectedEventTypes.includes(participation.eventType);
+    
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="admin-section">
       <h2>Participation Details</h2>
+      
+      {/* Search Bar */}
       <input
         type="text"
-        placeholder="Search by name or enrollment no."
+        placeholder="Search by name, enrollment no., or event name..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-bar"
       />
+
+      {/* Event Type Filters */}
+      <div className="filter-section" style={{ marginBottom: "20px", marginTop: "15px" }}>
+        <h4 style={{ marginBottom: "10px", color: "#d4a017" }}>Filter by Event Type:</h4>
+        <div className="filter-checkboxes" style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
+          {eventTypes.map((eventType) => (
+            <label key={eventType} className="filter-checkbox" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <input
+                type="checkbox"
+                checked={selectedEventTypes.includes(eventType)}
+                onChange={() => handleEventTypeChange(eventType)}
+                style={{ accentColor: "#d4a017" }}
+              />
+              <span style={{ color: "#f0e6d2", fontSize: "14px" }}>{eventType}</span>
+            </label>
+          ))}
+        </div>
+        {selectedEventTypes.length > 0 && (
+          <button
+            onClick={() => setSelectedEventTypes([])}
+            style={{
+              marginTop: "10px",
+              padding: "5px 10px",
+              backgroundColor: "#d93a3a",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "12px"
+            }}
+          >
+            Clear Filters
+          </button>
+        )}
+      </div>
+
+      {/* Results Summary */}
+      <div style={{ marginBottom: "15px", color: "#d4a017", fontSize: "14px" }}>
+        Showing {filteredParticipations.length} of {participations.length} participants
+      </div>
+
       <table className="participations-table">
         <thead>
           <tr>
@@ -223,24 +358,44 @@ const ParticipationDetails = () => {
             <th>Enrollment No.</th>
             <th>Branch</th>
             <th>Year</th>
+            <th>Event Type</th>
             <th>Exp</th>
             <th>Events</th>
             <th>Level</th>
           </tr>
         </thead>
         <tbody>
-          {filteredParticipations.map((participation, index) => (
-            <tr key={participation.id}>
-              <td>{index + 1}</td>
-              <td>{participation.name}</td>
-              <td>{participation.enrollmentNo}</td>
-              <td>{participation.branch}</td>
-              <td>{participation.year}</td>
-              <td>{participation.exp}</td>
-              <td>{participation.events}</td>
-              <td>{participation.level}</td>
+          {filteredParticipations.length > 0 ? (
+            filteredParticipations.map((participation, index) => (
+              <tr key={participation.id}>
+                <td>{index + 1}</td>
+                <td>{participation.name}</td>
+                <td>{participation.enrollmentNo}</td>
+                <td>{participation.branch}</td>
+                <td>{participation.year}</td>
+                <td>
+                  <span style={{ 
+                    backgroundColor: "#d4a017", 
+                    color: "#2a2518", 
+                    padding: "2px 6px", 
+                    borderRadius: "4px", 
+                    fontSize: "12px" 
+                  }}>
+                    {participation.eventType}
+                  </span>
+                </td>
+                <td>{participation.exp}</td>
+                <td>{participation.events}</td>
+                <td>{participation.level}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="9" style={{ textAlign: "center", color: "#d4a017", fontStyle: "italic" }}>
+                No participants found matching your criteria
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

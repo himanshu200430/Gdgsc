@@ -4,44 +4,34 @@ import "./gallery.css";
 const images = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1517088455889-bfa75135412c?ixlib=rb-0.3.5&auto=format&fit=crop&w=749&q=80",
-    alt: "City skyline",
+    src: "/images/Orientation/Orientation1.png",
+    alt: "GDGSC Orientation Event - Group Photo"
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1526656892012-7b336603ed46?ixlib=rb-0.3.5&auto=format&fit=crop&w=334&q=80",
-    alt: "Person working",
+    src: "/images/Orientation/Orientation2.png",
+    alt: "GDGSC Orientation Event - Activities"
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1521024221340-efe7d7fa239b?ixlib=rb-0.3.5&auto=format&fit=crop&w=750&q=80",
-    alt: "Camera equipment",
+    src: "/images/Orientation/zoo1.png",
+    alt: "Zoo Visit Event"
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1523038793606-2fd28f837a85?ixlib=rb-0.3.5&auto=format&fit=crop&w=334&q=80",
-    alt: "Workspace",
+    src: "/images/Orientation/Orientation3.png",
+    alt: "GDGSC Orientation Event - Presentations"
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1516832970803-325be7a92aa5?ixlib=rb-0.3.5&auto=format&fit=crop&w=751&q=80",
-    alt: "Office building",
+    src: "/images/Orientation/Orientation4.png",
+    alt: "GDGSC Orientation Event - Networking"
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1526938972776-11558ad4de30?ixlib=rb-0.3.5&auto=format&fit=crop&w=750&q=80",
-    alt: "Notebook",
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1517088455889-bfa75135412c?ixlib=rb-0.3.5&auto=format&fit=crop&w=749&q=80",
-    alt: "City skyline",
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1526656892012-7b336603ed46?ixlib=rb-0.3.5&auto=format&fit=crop&w=334&q=80",
-    alt: "Person working",
-  },
+    src: "/images/Orientation/COMBINE.png",
+    alt: "GDGSC Orientation Event - Networking" 
+  }
 ];
 
 export default function Gallery() {
@@ -60,7 +50,7 @@ export default function Gallery() {
             style={{
               position: "relative",
               color: "rgb(255, 215, 0)",
-              marginBottom: "0.5rem", // spacing between text and line
+              marginBottom: "0.5rem",
             }}
           >
             Gallery
@@ -68,10 +58,10 @@ export default function Gallery() {
           <div
             style={{
               width: "100%",
-              height: "2px",
+              height: "3px",
               background:
                 "radial-gradient(transparent, transparent, gold, transparent, transparent)",
-              marginBottom: "2rem", // spacing below the line
+              marginBottom: "2rem",
             }}
           ></div>
         </div>
@@ -80,10 +70,35 @@ export default function Gallery() {
       <div className="photo-grid">
         {images.map((image) => (
           <div key={image.id} className="photo-item">
-            <img src={image.src} alt={image.alt} className="photo-img" />
+            <img 
+              src={image.src} 
+              alt={image.alt} 
+              className="photo-img"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div 
+              style={{
+                display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '200px',
+                background: '#333',
+                color: '#999',
+                fontSize: '14px'
+              }}
+            >
+              Image not found
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+
+
+

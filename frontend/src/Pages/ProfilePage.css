@@ -16,8 +16,13 @@ body {
 }
 
 .futuristic-profile-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 100%, #1a1a1a 100%, #0a0a0a 100%);
+  min-height: 200vh;
+  background: 
+    linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
+    url('./images/yellow_futuristic_background_01.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   padding: 20px;
 }
 
@@ -548,6 +553,7 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
 }
+
 
 
 

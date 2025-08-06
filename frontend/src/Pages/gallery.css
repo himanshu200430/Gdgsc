@@ -1,39 +1,134 @@
 .gallery-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
+  background: #000000;
+  min-height: 100vh;
 }
 
 .gallery-container h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  color: rgb(255, 215, 0);
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
 }
 
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .photo-item {
   position: relative;
+  width: 100%;
+  border-radius: 15px;
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  aspect-ratio: 4/3;
+  /* box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2); */
+  transition: all 0.3s ease;
+  background: #000;
+}
+
+.photo-item:hover {
+  transform: translateY(-5px);
+  /* box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4); */
 }
 
 .photo-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 15px;
   transition: transform 0.3s ease;
 }
 
 .photo-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
+
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  /* color: rgb(255, 215, 0); */
+  padding: 20px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.photo-item:hover .photo-overlay {
+  transform: translateY(0);
+}
+
 .text {
   color: rgb(255, 215, 0);
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .photo-grid {
+    max-width: 900px;
+    gap: 30px;
+  }
+  
+  .gallery-container h1 {
+    font-size: 2.5rem;
+  }
+  
+  .gallery-container {
+    padding: 15px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .photo-grid {
+    gap: 25px;
+    padding: 15px 0;
+  }
+  
+  .gallery-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .gallery-container {
+    padding: 10px;
+  }
+  
+  .photo-overlay {
+    padding: 15px;
+  }
+}
+
+/* Very small mobile */
+@media (max-width: 480px) {
+  .photo-grid {
+    gap: 20px;
+  }
+  
+  .gallery-container h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Large screens: 3 columns */
+@media (min-width: 1200px) {
+  .photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+
+

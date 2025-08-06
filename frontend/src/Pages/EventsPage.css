@@ -1,14 +1,16 @@
 /* frontend/src/pages/EventsPage.css */
 
 /* Add these new styles */
-.event-image {
-  max-width: 100%; /* Ensure image doesn't overflow card */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 4px; /* Slightly rounded corners */
-  margin-bottom: 15px; /* Space below image */
-  display: block; /* Ensures it takes up its own line */
-  object-fit: cover; /* Covers the area, might crop */
-  max-height: 200px; /* Limit height to keep cards uniform */
+.character-icon {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+}
+
+.character-image {
+  width: 200px;
+  height: 300px;
+  object-fit: contain;
 }
 
 /* Existing styles below (ensure they are present or merge them) */
@@ -49,67 +51,143 @@
 
 .events-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .event-card {
-  background-color: #727f9b;
+  background: linear-gradient(145deg, #1f1b2e, #000000);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: #fff3cd;
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  min-height: 600px;
+}
+
+.event-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.event-image-container {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+  min-height: 400px;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 8px 0 0 8px;
+}
+
+.event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.event-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  color: #999;
+  font-size: 14px;
+}
+
+.event-details {
+  flex: 1;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 400px;
 }
 
-.event-card h2 {
-  color: #61dafb;
-  margin-top: 0;
-  font-size: 1.5em;
-  margin-bottom: 10px;
+.event-details h2 {
+  color: #fff176;
+  margin: 0 0 15px 0;
+  font-size: 1.3em;
 }
 
-.event-description {
-  font-size: 0.9em;
-  color: #ccc;
+.event-info {
   margin-bottom: 15px;
 }
 
-.event-card p {
+.event-info p {
   margin-bottom: 8px;
   color: #e0e0e0;
+  font-size: 0.9em;
 }
 
-.event-card strong {
+.event-info strong {
   color: #fff;
 }
 
 .register-button {
-  background-color: #4caf50; /* Green */
-  color: white;
-  padding: 10px 15px;
+  background: linear-gradient(90deg, #000000, #f7382a);
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
-  width: 100%;
+  transition: background 0.3s ease;
 }
 
 .register-button:hover {
-  background-color: #45a049;
+  background: linear-gradient(90deg, #ff1616, #000000);
 }
 
 .event-inactive-message {
-  color: #f0f0f0;
-  background-color: #000000; /* Grey */
+  background-color: #bdbdbd;
+  color: #212121;
   padding: 8px 12px;
   border-radius: 5px;
   text-align: center;
   font-size: 0.9em;
   margin-top: 15px;
+  font-weight: bold;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .events-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .event-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .event-image-container {
+    height: 200px;
+  }
+  
+  .event-details {
+    padding: 15px;
+  }
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .events-list {
+    grid-template-columns: 1fr;
+    max-width: 700px;
+    gap: 25px;
+  }
 }
 
 /* Aesthetic updates */
@@ -172,4 +250,16 @@
   margin-top: 15px;
   font-weight: bold;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

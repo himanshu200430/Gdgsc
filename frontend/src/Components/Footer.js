@@ -49,17 +49,17 @@ const Footer = () => {
               }}
             >
               <a
-                href="https://instagram.com/"
+                href="https://www.instagram.com/gdgsc_edc?igsh=MWRuZHlzd3lxOHpzdw=="
                 className="social-link instagram"
               >
                 <FaInstagram size={24} />
               </a>
-              <a href="https://linkedin.com/" className="social-link linkedin">
+              <a href="https://www.linkedin.com/company/game-dev-guild-students-club/" className="social-link linkedin">
                 <FaLinkedin size={24} />
               </a>
-              <a href="https://github.com/" className="social-link github">
+              {/* <a href="https://github.com/" className="social-link github">
                 <FaGithub size={24} />
-              </a>
+              </a> */}
               <a
                 href="mailto:developersgdgsc@gmail.com"
                 className="social-link email"
@@ -511,3 +511,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

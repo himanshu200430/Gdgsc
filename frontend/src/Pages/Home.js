@@ -38,7 +38,7 @@ const Home = () => {
             color: "white",
             fontFamily: '"Rajdhani", "Agency FB", "Impact", sans-serif',
             fontSize: "1.5rem",
-            textShadow: "0 0 10px #fad11dff, 0 0 20px #000000ff",
+            textShadow: "0 0 10px #f5d95eff, 0 0 20px #000000ff",
             textAlign: "left",
             letterSpacing: "1px",
             fontWeight: "bold",
@@ -58,7 +58,14 @@ const Home = () => {
             zIndex: 2,
           }}
         >
-          <Button text="Join Community" />
+          <a 
+            href="https://chat.whatsapp.com/CkYY8QDlQIkDBrWIOVOA8T?mode=ac_t" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <Button text="Join Community" />
+          </a>
           <Button text="Become Partner" />
         </div>
       </div>
@@ -92,3 +99,4 @@ const Home = () => {
 };
 
 export default Home;
+

@@ -110,39 +110,77 @@ const EventsPage = () => {
         {events.length === 0 ? (
           <div className="error-message">No active events found at the moment.</div>
         ) : (
-          events.map((event) => (
-            <div key={event._id} className="event-card">
-              {event.imageUrl && (
-                <img
-                  src={event.imageUrl}
-                  alt={event.name}
-                  className="event-image"
-                />
-              )}
-              <h2>{event.name}</h2>
-              <div className="event-description">{event.description}</div>
-              <p>
-                <strong>📅 Date:</strong>
-                {new Date(event.date).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>📍 Location:</strong> {event.location}
-              </p>
-              <p>
-                <strong>⭐ Points:</strong> {event.pointsAwarded} EXP
-              </p>
-              {event.isActive ? (
-                <button
-                  onClick={() => handleRegister(event._id)}
-                  className="register-button"
-                >
-                  Register Now
-                </button>
-              ) : (
-                <div className="event-inactive-message">Event Inactive</div>
-              )}
-            </div>
-          ))
+          events.map((event, index) => {
+            // Array of character icons to cycle through
+            const characterIcons = [
+              "/assets/Arcade_characters/girl.png",
+              "/assets/Arcade_characters/boy.png",
+              "/assets/Arcade_characters/warrior.png",
+              "/assets/Arcade_characters/mage.jpeg",
+              "/assets/Arcade_characters/archer.png"
+            ];
+            
+            // Array of event images to cycle through
+            const eventImages = [
+              "/images/events/past_event_22.png",
+              "/images/events/past_event_11.png",
+              "/images/events/past_event_22.png",
+              "/images/events/past_event_11.png",
+              "/images/events/event5.jpg"
+            ];
+            
+            // Get character icon and event image based on index, cycling through available options
+            const characterIcon = characterIcons[index % characterIcons.length];
+            const defaultEventImage = eventImages[index % eventImages.length];
+            
+            return (
+              <div key={event._id} className="event-card">
+                <div className="event-image-container">
+                  {event.imageUrl ? (
+                    <img
+                      src={event.imageUrl}
+                      alt={event.name}
+                      className="event-image"
+                    />
+                  ) : (
+                    <img
+                      src={defaultEventImage}
+                      alt={event.name}
+                      className="event-image"
+                    />
+                  )}
+                </div>
+                <div className="event-details">
+                  <div className="character-icon">
+                    <img src={characterIcon} alt="Character" className="character-image" />
+                  </div>
+                  <h2>{event.name}</h2>
+                  <div className="event-info">
+                    <p>
+                      <strong>📅 Date:</strong>
+                      {new Date(event.date).toLocaleDateString()}
+                    </p>
+                    <p>
+                      <strong>📍 Location:</strong> {event.location}
+                    </p>
+                    <p>
+                      <strong>⭐ Points:</strong> {event.pointsAwarded} EXP
+                    </p>
+                  </div>
+                  {event.isActive ? (
+                    <button
+                      onClick={() => handleRegister(event._id)}
+                      className="register-button"
+                    >
+                      Register Now
+                    </button>
+                  ) : (
+                    <div className="event-inactive-message">Event Inactive</div>
+                  )}
+                </div>
+              </div>
+            );
+          })
         )}
       </div>
     </div>
@@ -150,4 +188,11 @@ const EventsPage = () => {
 };
 
 export default EventsPage;
+
+
+
+
+
+
+
 

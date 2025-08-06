@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./Button";
-import Frame from "./Frame/Frame";
-import Timeline from "./timeline";
+
+
 
 const Discord = () => {
   return (
@@ -29,13 +29,16 @@ const Discord = () => {
               }}
             ></div>
           </div>
-          <p style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <p style={{ paddingTop: "2rem", paddingBottom: "2rem", color: "white" }}>
             We're passionate about connecting with people to talk about what we
-            are doing at GDSC. Join our Discord community and stay up to date
+            are doing at GDGSC. Join our Discord community and stay up to date
             with the latest news and updates.
           </p>
 
-          <Button text="Join Discord"></Button>
+          <a href="https://discord.gg/mzMJnbYYWc" target="_blank" rel="noopener noreferrer">
+  <Button text="Join Discord" />
+</a>
+
 
           {/* <Frame>
       <img src="/images/chest.png" alt="discord" width={"100px"}></img>
@@ -53,3 +56,4 @@ const Discord = () => {
 };
 
 export default Discord;
+
