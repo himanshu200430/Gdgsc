@@ -18,6 +18,13 @@ const { protect, authorize } = require('../middleware/authMiddleware'); // Path 
 // --- END CRITICAL CHECK ---
 
 
+// @route   POST /api/registrations/:eventId
+// @desc    Register user for an event & award EXP
+// @access  Private (requires authentication)
+// >>> THIS IS THE ROUTE WE'RE FOCUSED ON <<<
+router.post('/:eventId', protect, registerForEvent);
+
+
 // @route   GET /api/registrations/my
 // @desc    Get current logged-in user's event registrations
 // @access  Private
@@ -28,13 +35,6 @@ router.get('/my', protect, getMyRegistrations);
 // @desc    Get all event registrations (Admin only)
 // @access  Private/Admin
 router.get('/', protect, authorize('admin'), getRegistrations);
-
-
-// @route   POST /api/registrations/:eventId
-// @desc    Register user for an event & award EXP
-// @access  Private (requires authentication)
-// >>> THIS IS THE ROUTE WE'RE FOCUSED ON <<<
-router.post('/:eventId', protect, registerForEvent);
 
 
 // @route   DELETE /api/registrations/:id
