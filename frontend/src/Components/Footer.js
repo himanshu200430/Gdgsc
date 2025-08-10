@@ -61,7 +61,7 @@ const Footer = () => {
                 <FaGithub size={24} />
               </a> */}
               <a
-                href="mailto:developersgdgsc@gmail.com"
+                href="mailto:gdsgc.web@gmail.com"
                 className="social-link email"
               >
                 <IoIosMail size={30} />
