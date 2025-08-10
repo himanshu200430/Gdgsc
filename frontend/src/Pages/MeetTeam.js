@@ -409,14 +409,14 @@ const MeetTeam = () => {
           github: "#",
           photo:"images/meetteam/Team Outreach/Prisha1.png",
         },
-        {
-          name: "Vansh Gautam",
-          role: "PR",
-          linkedin: "https://www.linkedin.com/in/vanshgautam33/",
-          instagram: "https://www.instagram.com/vaxsh._xx/",
-          github: "https://github.com/VanshGautamDev",
-          photo:"images/meetteam/Team Outreach/Vansh Gautam1.jpg",
-        },
+        // {
+        //   name: "Vansh Gautam",
+        //   role: "PR",
+        //   linkedin: "https://www.linkedin.com/in/vanshgautam33/",
+        //   instagram: "https://www.instagram.com/vaxsh._xx/",
+        //   github: "https://github.com/VanshGautamDev",
+        //   photo:"images/meetteam/Team Outreach/Vansh Gautam1.jpg",
+        // },
       ],
     },
     {
@@ -440,14 +440,14 @@ const MeetTeam = () => {
           github: "https://github.com/dhwani-verma",
           photo:"images/meetteam/Team Prototype/Dhwani Verma1.jpg",
         },
-        {
-          name: "Abhiram Sridhar",
-          role: "Design",
-          linkedin: "https://www.linkedin.com/in/abhiram-r-sridhar-88a8002b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-          instagram: "https://www.instagram.com/abhiramr_sridhar?igsh=MXh4M2lwbWk3eW9naA==",
-          github: "#",
-          photo:"images/meetteam/Team Prototype/Abhiram R Sridhar1.jpg",
-        },
+        // {
+        //   name: "Abhiram Sridhar",
+        //   role: "Design",
+        //   linkedin: "https://www.linkedin.com/in/abhiram-r-sridhar-88a8002b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        //   instagram: "https://www.instagram.com/abhiramr_sridhar?igsh=MXh4M2lwbWk3eW9naA==",
+        //   github: "#",
+        //   photo:"images/meetteam/Team Prototype/Abhiram R Sridhar1.jpg",
+        // },
         {
           name: "Daksh Tekwani",
           role: "Design",
@@ -555,15 +555,22 @@ const MeetTeam = () => {
                 <div key={memberIndex} className={`member-card ${team.color}`}>
                   <div className="member-image-container">
                     <div className="image-wrapper">
-                      <img
+                      {member.photo !== '' ? <img
                         src={member.photo}
+                        onerror="this.onerror=null; this.src='images/meetteam/fallback-image.jpg';"
                         alt={member.name}
                         className="member-image"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = "https://via.placeholder.com/300";
                         }}
+                      />:
+                      <img
+                        src="images/meetteam/fallback-image.jpg"
+                        alt={member.name}
+                        className="member-image"
                       />
+                      }
                     </div>
                   </div>
 

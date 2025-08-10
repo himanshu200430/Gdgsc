@@ -12,7 +12,7 @@ const FAQ = () => {
     {
       question: "What is the eligibility criteria for participation?",
       answer:
-        "The hackathon is open to all undergraduate and graduate students from recognized institutions. Participants must be at least 18 years old.",
+        "The hackathon is open to all undergraduate and graduate students from recognized institutions",
     },
     {
       question: "Can students from other colleges participate?",

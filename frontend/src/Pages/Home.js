@@ -13,7 +13,7 @@ const Home = () => {
     >
       <div
         className="home-text"
-        style={{ zIndex: 2, paddingLeft: "5vw", width: "40vw" }}
+        style={{ zIndex: 2, paddingLeft: "5vw", width: "60vw",background:"linear-gradient(90deg,black,black,transparent)" }}
       >
         <h1
           style={{
@@ -66,7 +66,14 @@ const Home = () => {
           >
             <Button text="Join Community" />
           </a>
+          <a 
+            href="https://forms.gle/etn7j3AAQGMXiK6J7" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
           <Button text="Become Partner" />
+          </a>
         </div>
       </div>
 
@@ -89,7 +96,6 @@ const Home = () => {
           style={{
             objectFit: "cover",
             objectPosition: "top",
-            filter: "brightness(0.7)",
           }}
           alt="gaming community"
         />

@@ -80,7 +80,7 @@ const Footer = () => {
               style={{ fontSize: "1.2em" }}
               href="mailto:developersgdgsc@gmail.com"
             >
-              &lt;developersgdgsc@gmail.com&gt;
+              &lt;gdgsc.web@gmail.com&gt;
             </a>
           </div>
         </div>
@@ -91,35 +91,49 @@ const Footer = () => {
             <span className="title-ornament">✦</span> Get In Touch{" "}
             <span className="title-ornament">✦</span>
           </h3>
-          <form className="royal-form">
-            <div className="form-field">
-              <label>Your Name</label>
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="form-input"
-              />
-            </div>
-            <div className="form-field">
-              <label>Email address</label>
-              <input
-                type="text"
-                placeholder="Email address"
-                className="form-input"
-              />
-            </div>
-            <div className="form-field">
-              <label>Your Message</label>
-              <textarea
-                placeholder="Your Message"
-                className="form-textarea"
-              ></textarea>
-            </div>
-            <button type="submit" className="royal-button">
-              <FaScroll className="button-icon" />
-              Send
-            </button>
-          </form>
+          <form
+      className="royal-form"
+      action="https://formspree.io/f/xdkdywbv"
+      method="POST"
+    >
+      <div className="form-field">
+        <label>Your Name</label>
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          className="form-input"
+          required
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Email address</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          className="form-input"
+          required
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Your Message</label>
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          className="form-textarea"
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" className="royal-button">
+        <FaScroll className="button-icon" />
+        Send
+      </button>
+    </form>
+
         </div>
       </div>
 

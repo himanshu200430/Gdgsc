@@ -107,8 +107,9 @@
 }
 
 .team-members {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+  flex-wrap: wrap;
   gap: 2rem;
   margin-top: 3rem;
   padding: 0 1rem;

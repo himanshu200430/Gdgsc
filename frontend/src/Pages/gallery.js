@@ -7,31 +7,53 @@ const images = [
     src: "/images/Orientation/Orientation1.png",
     alt: "GDGSC Orientation Event - Group Photo"
   },
-  {
+  // {
+  //   id: 2,
+  //   src: "/images/Orientation/Orientation2.png",
+  //   alt: "GDGSC Orientation Event - Activities"
+  // },
+  // {
+  //   id: 3,
+  //   src: "/images/Orientation/zoo1.png",
+  //   alt: "Zoo Visit Event"
+  // },
+  // {
+  //   id: 4,
+  //   src: "/images/Orientation/Orientation3.png",
+  //   alt: "GDGSC Orientation Event - Presentations"
+  // },
+    {
     id: 2,
-    src: "/images/Orientation/Orientation2.png",
-    alt: "GDGSC Orientation Event - Activities"
+    src: "/images/Orientation/collage6.png",
+    alt: "GDGSC Orientation Event - Networking"
   },
-  {
-    id: 3,
-    src: "/images/Orientation/zoo1.png",
-    alt: "Zoo Visit Event"
-  },
-  {
+
+    {
     id: 4,
-    src: "/images/Orientation/Orientation3.png",
-    alt: "GDGSC Orientation Event - Presentations"
+    src: "/images/Orientation/collage8.png",
+    alt: "GDGSC Orientation Event - Networking"
   },
+  
   {
     id: 5,
     src: "/images/Orientation/Orientation4.png",
     alt: "GDGSC Orientation Event - Networking"
   },
+      {
+    id: 3,
+    src: "/images/Orientation/collage7.png",
+    alt: "GDGSC Orientation Event - Networking"
+  },
   {
     id: 6,
-    src: "/images/Orientation/COMBINE.png",
+    src: "/images/Orientation/collage9.png",
     alt: "GDGSC Orientation Event - Networking" 
-  }
+  },
+    {
+    id: 7,
+    src: "/images/Orientation/combine.png",
+    alt: "GDGSC Orientation Event - Networking"
+  },
 ];
 
 export default function Gallery() {

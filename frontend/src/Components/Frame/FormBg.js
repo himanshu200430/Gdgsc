@@ -4,7 +4,8 @@ import './border.css';
 const FormBg = ({children}) => {
     return (
         <div style={{
-            minHeight: '200vh',
+            // minHeight: '200vh',
+            height: '100vh',
             background: `
                 linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.7)),
                 url('/images/yellow_futuristic_background_01.jpg')
@@ -13,7 +14,8 @@ const FormBg = ({children}) => {
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed',
             padding: '20px',
-            position: 'relative'
+            position: 'relative',
+            width: '100%',
         }}>
             <div className="contest-card" style={{
                 width:"fit-content",

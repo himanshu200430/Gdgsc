@@ -23,6 +23,27 @@ const getExpForLevel = (level) => {
 };
 // --- END SYNCHRONIZED HELPER FUNCTION ---
 
+
+function formatDate(isoString) {
+  const date = new Date(isoString);
+
+  const day = date.getUTCDate();
+  const month = date.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
+  const year = date.getUTCFullYear();
+
+  const suffix = (n) => {
+    if (n > 3 && n < 21) return 'th';
+    switch (n % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
+  return `${day}${suffix(day)} ${month} ${year}`;
+}
+
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,14 +131,13 @@ const EventsPage = () => {
         {events.length === 0 ? (
           <div className="error-message">No active events found at the moment.</div>
         ) : (
-          events.map((event, index) => {
+          events.sort((a, b) => new Date(b.date) - new Date(a.date)).map((event, index) => {
             // Array of character icons to cycle through
             const characterIcons = [
               "/assets/Arcade_characters/girl.png",
               "/assets/Arcade_characters/boy.png",
               "/assets/Arcade_characters/warrior.png",
               "/assets/Arcade_characters/mage.jpeg",
-              "/assets/Arcade_characters/archer.png"
             ];
             
             // Array of event images to cycle through
@@ -158,7 +178,7 @@ const EventsPage = () => {
                   <div className="event-info">
                     <p>
                       <strong>📅 Date:</strong>
-                      {new Date(event.date).toLocaleDateString()}
+                       <span style={{marginLeft:'6px'}}>{ formatDate(event.date)}</span>
                     </p>
                     <p>
                       <strong>📍 Location:</strong> {event.location}
@@ -167,7 +187,7 @@ const EventsPage = () => {
                       <strong>⭐ Points:</strong> {event.pointsAwarded} EXP
                     </p>
                   </div>
-                  {event.isActive ? (
+                  {event.isActive && new Date(event.date) > new Date() ? (
                     <button
                       onClick={() => handleRegister(event._id)}
                       className="register-button"
