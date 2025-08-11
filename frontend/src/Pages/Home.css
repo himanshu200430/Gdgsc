@@ -1,0 +1,28 @@
+        /* <h1
+          style={{
+            fontWeight: 800,
+            color: "white",
+            marginTop: "100px",
+            fontSize: "3.5rem",
+            lineHeight: "1.2",
+          }}
+        > */
+@media (max-width: 689px) {
+  .home-text h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .home-text{
+    width: 80vw;
+  }
+    
+}
+@media (max-width: 412px) {
+  .home-text h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 20px;
+  }
+    
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../Components/Button";
+import "./Home.css"; 
 
 const Home = () => {
   return (
@@ -13,14 +14,14 @@ const Home = () => {
     >
       <div
         className="home-text"
-        style={{ zIndex: 2, paddingLeft: "5vw", width: "60vw",background:"linear-gradient(90deg,black,black,transparent)" }}
+        style={{ zIndex: 2, paddingLeft: "5vw",background:"linear-gradient(90deg,black,black,transparent)" }}
       >
         <h1
           style={{
             fontWeight: 800,
             color: "white",
             marginTop: "100px",
-            fontSize: "3.5rem",
+            // fontSize: "3.5rem",
             lineHeight: "1.2",
           }}
         >

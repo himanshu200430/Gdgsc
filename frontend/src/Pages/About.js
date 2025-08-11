@@ -186,6 +186,7 @@ const About = () => {
             src="/assets/logos/About.jpeg"
             className="discordImage"
             alt="About"
+            style={{zIndex: 1}}
           ></img>
         </div>
       </div>

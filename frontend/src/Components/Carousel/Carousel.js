@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Carousel = () => {
   return (
-    <div class="card-3d">
+    <div class="card-3d" >
       <div>
         <img src={"/assets/g_photos/one.webp"} height={200} width={150}></img>
       </div>

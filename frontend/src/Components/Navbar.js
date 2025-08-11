@@ -1,148 +1,107 @@
-import React from "react";
-
-// user react-router-dom for routing
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import "./Navbar.css"; // Import the CSS file
 
 const Navbar = () => {
   const { user, isAuthenticated, loading, logout } = useAuth();
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div
-      style={{
-        alignItems: "center",
-        position: "fixed",
-        top: "0px",
-        display: "flex",
-        justifyContent: "space-between",
-        width: "100vw",
-        padding: "20px 20px",
-        paddingTop: "20px",
-        zIndex: "10000",
-      }}
-      className="navbar"
-    >
-      <div>
-        <a href="/">
-          <img
-            src="/assets/logos/logo1.jpg"
-            alt="logo"
-            style={{ width: "36px", height: "36px" }}
-          />
-        </a>
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <Link to="/" onClick={closeMenu}>
+          <img src="/assets/logos/logo1.jpg" alt="logo" className="logo-img" />
+        </Link>
       </div>
-      <ul
-        style={{
-          fontFamily: "'Valorax', sans-serif",
-          display: "flex",
-          gap: "40px",
-          listStyleType: "none",
-          fontSize: "1em",
-          color: "white",
-        }}
-      >
+
+      {/* Hamburger menu icon */}
+      <div className={`hamburger ${isOpen ? "open" : ""}`} onClick={toggleMenu}>
+        <div className="line"></div>
+        <div className="line"></div>
+        <div className="line"></div>
+      </div>
+
+      {/* Navigation links */}
+      <ul className={`nav-links ${isOpen ? "open" : ""}`}>
         <li>
-          <Link
-            to="/about"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ fontFamily: "'Jura', sans-serif", fontWeight: "700" }}
-          >
+          <Link to="/about" onClick={closeMenu}>
             ABOUT
           </Link>
         </li>
         <li>
-          <Link
-            to="/events"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ fontFamily: "'Jura', sans-serif", fontWeight: "700" }}
-          >
+          <Link to="/events" onClick={closeMenu}>
             EVENTS
           </Link>
         </li>
         <li>
-          <Link
-            to="/stay-tuned"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ fontFamily: "'Jura', sans-serif", fontWeight: "700" }}
-          >
+          <Link to="/stay-tuned" onClick={closeMenu}>
             GAMES
           </Link>
         </li>
         <li>
-          <Link
-            to="/team"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ fontFamily: "'Jura', sans-serif", fontWeight: "700" }}
-          >
+          <Link to="/team" onClick={closeMenu}>
             TEAMS
           </Link>
         </li>
         <li>
-          <Link
-            to="/gallery"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ fontFamily: "'Jura', sans-serif", fontWeight: "700" }}
-          >
+          <Link to="/gallery" onClick={closeMenu}>
             GALLERY
           </Link>
         </li>
-        {/* <li>
-          <a href="#footer">Contact</a>
-        </li> */}
+        {/* User actions are moved inside the mobile menu for small screens */}
+        <li className="nav-actions-mobile">
+            {isAuthenticated && !loading ? (
+                 <>
+                    {user?.role === "admin" && (
+                        <Link to="/admin" onClick={closeMenu}>Admin</Link>
+                    )}
+                    <Link to="/profile" onClick={closeMenu}>Profile</Link>
+                    <Link to="/" onClick={() => { logout(); closeMenu(); }}>Logout</Link>
+                 </>
+            ) : (
+                <Link to="/login" onClick={closeMenu}>Login</Link>
+            )}
+        </li>
       </ul>
 
-      <div style={{ paddingRight: "22px", fontWeight: "600" }}>
-        {isAuthenticated && !loading ? (
-          <>
-            {user?.role === "admin" && ( // CONDITIONAL ADMIN LINK
-              <li>
-                <Link to="/admin">Admin</Link>
-              </li>
-            )}
-            <a
-              href="/profile"
-              style={{
-                color: "white",
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <img
-                src={user?.profilePicture}
-                alt="profile"
-                style={{ width: "36px", height: "36px", borderRadius: "50%" }}
-              />
-              <div>{user?.username}</div>
-            </a>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              style={{ color: "white", textDecoration: "none" }}
-            >
+      {/* User profile / Login section for desktop */}
+      <div className="user-actions">
+        {!loading && (
+          isAuthenticated ? (
+            <>
+              {user?.role === "admin" && (
+                <Link to="/admin" className="admin-link">
+                  Admin
+                </Link>
+              )}
+              <Link to="/profile" className="profile-link">
+                <img
+                  src={user?.profilePicture || '/assets/default-avatar.png'} // Add a fallback avatar
+                  alt="profile"
+                  className="profile-picture"
+                />
+                <span className="username">{user?.username}</span>
+              </Link>
+            </>
+          ) : (
+            <Link to="/login" className="login-button">
               Login
             </Link>
-          </>
+          )
         )}
       </div>
-    </div>
+    </nav>
   );
 };
 
 export default Navbar;
-

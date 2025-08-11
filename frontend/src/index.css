@@ -5,6 +5,10 @@
   font-weight: normal;
   font-style: normal;
 }
+html, body {
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
 
 * {
   margin: 0;
