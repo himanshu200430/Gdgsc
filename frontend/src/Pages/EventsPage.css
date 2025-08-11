@@ -63,7 +63,6 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   color: #fff3cd;
   transition: transform 0.3s ease;
-  overflow: hidden;
   display: flex;
   min-height: 600px;
 }
@@ -164,7 +163,7 @@
 @media (max-width: 768px) {
   .events-list {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 80px;
   }
   
   .event-card {
