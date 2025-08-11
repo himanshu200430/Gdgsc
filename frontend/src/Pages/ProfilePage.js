@@ -254,7 +254,7 @@ progressPercentage = Math.min(100, Math.max(0, progressPercentage));
             <h2 className="profile-name">{user.username}</h2>
             <h4 className=''>{user.rank}</h4>
 
-            <p className="profile-role">{user.bio || "Game Developer"}</p>
+            <p className="profile-role">{user.bio || "No bio provided."}</p>
             <span className="detail-value">{user.email}</span>
             
             {/* <div className="profile-details">
