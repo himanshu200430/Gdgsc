@@ -57,7 +57,7 @@ const Faculty = () => {
           </div>
         </Frame>
 
-        <Frame text={"Dr. Renu Dalal"}>
+        <Frame text={"Dr. Renu"}>
           <div
             style={{
               padding: "10px 40px",

@@ -74,6 +74,7 @@ const About = () => {
                   fontSize: "3.2em",
                   fontWeight: "700",
                   color: "white",
+                  background:"transparent",
                   textShadow: "0 0 20px rgba(248, 111, 19, 0.8), 0 0 40px rgba(248, 111, 19, 0.4)",
                   animation: "glow 2s ease-in-out infinite alternate",
                 }}
@@ -84,7 +85,7 @@ const About = () => {
                 color: "rgba(255, 255, 255, 0.9)", 
                 fontWeight: "500",
                 fontSize: "1.1em",
-                letterSpacing: "1px"
+                letterSpacing: "1px",
               }}> Team members</span>
             </div>
             <div

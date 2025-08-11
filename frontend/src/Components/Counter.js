@@ -78,7 +78,7 @@ const AnimatedCounter = ({ target, duration }) => {
   };
 
   return (
-    <span ref={elementRef}>
+    <span ref={elementRef} style={{background:"transparent", color: "#fff", fontWeight: "bold"}}>
       {count}
     </span>
   );

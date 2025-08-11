@@ -237,53 +237,6 @@ const MeetTeam = () => {
       ],
     },
     {
-      name: "Team Scratch",
-      color: "team-blue",
-      members: [
-        {
-          name: "Mayank",
-          role: "WebDev",
-          linkedin: "https://www.linkedin.com/in/mayank9918/",
-          instagram: "#",
-          github: "https://github.com/Mayank-9918",
-          photo: "images/meetteam/Team scratch_/mayank.jpg",
-        },
-        {
-          name: "Anmol Pandit",
-          role: "WebDev",
-          linkedin: "https://www.linkedin.com/in/akpcoder076/",
-          instagram: "https://www.instagram.com/anmolprajapati2004?igsh=NXBuZ2x3ZmoybHpj",
-          github: "https://github.com/ANMOLPANDIT38",
-          photo: "images/meetteam/Team scratch_/Anmolkp1.jpg",
-        },
-        {
-          name: "Chirag Sharma",
-          role: "WebDev",
-          linkedin: "https://www.linkedin.com/in/chirag-sharma-318404292/",
-          instagram: "#",
-          github: "https://github.com/chirags1725/",
-          photo: "images/meetteam/Team scratch_/chirag.jpg",
-        },
-        
-        {
-          name: "Rishit Kadha",
-          role: "WebDev",
-          linkedin: "#",
-          instagram: "https://www.instagram.com/rishit_kadha_?igsh=eGl3ZWw0cGx2ZWty",
-          github: "https://github.com/rishit-kadha",
-          photo:"images/meetteam/Team scratch_/Rishit_Kadha1.jpg",
-        },
-        {
-          name: "Samriddhi Bisht",
-          role: "WebDev",
-          linkedin: "https://in.linkedin.com/in/samriddhi-bisht-370499290",
-          instagram: "https://www.instagram.com/samriddhi_sb_?igsh=dWFiMWdzaDlrMzU1&utm_source=qr",
-          github: "#",
-          photo:"images/meetteam/Team scratch_/Samriddhi Bisht.jpeg",
-        },
-      ],
-    },
-    {
       name: "Team OverWatch",
       color: "team-cyan",
       members: [
@@ -528,6 +481,53 @@ const MeetTeam = () => {
         },
       ],
     },
+    {
+      name: "Team Scratch",
+      color: "team-blue",
+      members: [
+        {
+          name: "Mayank",
+          role: "WebDev",
+          linkedin: "https://www.linkedin.com/in/mayank9918/",
+          instagram: "#",
+          github: "https://github.com/Mayank-9918",
+          photo: "images/meetteam/Team scratch_/mayank.jpg",
+        },
+        {
+          name: "Anmol Pandit",
+          role: "WebDev",
+          linkedin: "https://www.linkedin.com/in/akpcoder076/",
+          instagram: "https://www.instagram.com/anmolprajapati2004?igsh=NXBuZ2x3ZmoybHpj",
+          github: "https://github.com/ANMOLPANDIT38",
+          photo: "images/meetteam/Team scratch_/Anmolkp1.jpg",
+        },
+        {
+          name: "Chirag Sharma",
+          role: "WebDev",
+          linkedin: "https://www.linkedin.com/in/chirag-sharma-318404292/",
+          instagram: "#",
+          github: "https://github.com/chirags1725/",
+          photo: "images/meetteam/Team scratch_/chirag.jpg",
+        },
+        
+        {
+          name: "Rishit Kadha",
+          role: "WebDev",
+          linkedin: "#",
+          instagram: "https://www.instagram.com/rishit_kadha_?igsh=eGl3ZWw0cGx2ZWty",
+          github: "https://github.com/rishit-kadha",
+          photo:"images/meetteam/Team scratch_/Rishit_Kadha1.jpg",
+        },
+        {
+          name: "Samriddhi Bisht",
+          role: "WebDev",
+          linkedin: "https://in.linkedin.com/in/samriddhi-bisht-370499290",
+          instagram: "https://www.instagram.com/samriddhi_sb_?igsh=dWFiMWdzaDlrMzU1&utm_source=qr",
+          github: "#",
+          photo:"images/meetteam/Team scratch_/Samriddhi Bisht.jpeg",
+        },
+      ],
+    }
   ];
 
   return (

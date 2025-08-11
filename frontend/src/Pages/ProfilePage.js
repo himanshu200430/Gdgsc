@@ -255,8 +255,9 @@ progressPercentage = Math.min(100, Math.max(0, progressPercentage));
             <h4 className=''>{user.rank}</h4>
 
             <p className="profile-role">{user.bio || "Game Developer"}</p>
+            <span className="detail-value">{user.email}</span>
             
-            <div className="profile-details">
+            {/* <div className="profile-details">
               <div className="detail-row">
                 <span className="detail-label">Gender</span>
                 <span className="detail-value">Male</span>
@@ -273,7 +274,7 @@ progressPercentage = Math.min(100, Math.max(0, progressPercentage));
                 <span className="detail-label">Mail</span>
                 <span className="detail-value">{user.email}</span>
               </div>
-            </div>
+            </div> */}
 
             <button onClick={() => setIsEditing(true)} className="edit-profile-button">
               Edit Profile
