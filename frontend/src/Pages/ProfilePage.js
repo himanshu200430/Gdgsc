@@ -366,7 +366,7 @@ progressPercentage = Math.min(100, Math.max(0, progressPercentage));
                 </div>
               </div> */}
               <div style={{margin:'20px',marginBottom:'40px',opacity:'0.8'}}><center>No game played yet!</center></div>
-              <a href="stay-tuned">
+              <a href="stay-tuned" style={{textDecoration:'none'}}>
               <button className="add-friends-btn">
               <PiGameControllerBold className="add-friends-icon" />
               

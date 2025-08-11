@@ -135,16 +135,15 @@ const EventsPage = () => {
             // Array of character icons to cycle through
             const characterIcons = [
               "/assets/Arcade_characters/girl.png",
-              "/assets/Arcade_characters/hd-breach-valorant-agent-character-png-733961695136507svjli3yqak.png",
-              "/assets/Arcade_characters/hd-valorant-game-omen-character-player-png-733961695115637mjmuwerdpd.png",
-              "/assets/Arcade_characters/hd-cypher-valorant-agent-player-character-png-733961695136397ip7azqjn0f.png",
-              "/assets/Arcade_characters/hd-valorant-skye-female-agent-character-player-png-733961695044451lht9vgdild.png",
-              "/assets/Arcade_characters/hd-jett-agent-valorant-character-png-73396169513617240gxkjy1tt.png",
+              "/assets/Arcade_characters/boy.png",
+              "/assets/Arcade_characters/warrior.png",
+              "/assets/Arcade_characters/mage.jpeg",
             ];
+            
             
             // Array of event images to cycle through
             const eventImages = [
-              "/images/events/orientation.png",
+              "https://drive.google.com/file/d/1-MQDe-qvFlp-9EbekEF9O-9z2faT7fEp/view?usp=sharing",
               "/images/events/Game dev workshop.webp",
               "/images/events/past_event_11.png",
               "/images/events/past_event_22.png",

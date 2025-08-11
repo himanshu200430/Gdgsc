@@ -125,7 +125,6 @@ body {
 .profile-role {
   font-size: 14px;
   color: #ffb84d;
-  margin-bottom: 30px;
   opacity: 0.8;
 }
 
@@ -151,6 +150,7 @@ body {
 .detail-value {
   color: #ffb84d;
   font-size: 12px;
+  margin-bottom: 30px;
 }
 
 .edit-profile-button {
