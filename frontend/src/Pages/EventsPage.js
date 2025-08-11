@@ -143,7 +143,7 @@ const EventsPage = () => {
             
             // Array of event images to cycle through
             const eventImages = [
-              "https://drive.google.com/uc?export=view&id=1-MQDe-qvFlp-9EbekEF9O-9z2faT7fEp",
+              "https://i.ibb.co/xt9Mspf2/orientation.png",
               "/images/events/Game dev workshop.webp",
               "/images/events/past_event_11.png",
               "/images/events/past_event_22.png",
