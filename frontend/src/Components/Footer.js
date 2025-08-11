@@ -78,7 +78,7 @@ const Footer = () => {
             <a
               className="messenger-link"
               style={{ fontSize: "1.2em" }}
-              href="mailto:developersgdgsc@gmail.com"
+              href="mailto:gdgsc.web@gmail.com"
             >
               &lt;gdgsc.web@gmail.com&gt;
             </a>
