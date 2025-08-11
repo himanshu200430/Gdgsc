@@ -134,7 +134,7 @@ const EventsPage = () => {
           events.sort((a, b) => new Date(b.date) - new Date(a.date)).map((event, index) => {
             // Array of character icons to cycle through
             const characterIcons = [
-              "/assets/Arcade_characters/hd-breach-valorant-agent-character-png-733961695136507svjli3yqak.png",
+              "/assets/Arcade_characters/girl.png",
               "/assets/Arcade_characters/hd-breach-valorant-agent-character-png-733961695136507svjli3yqak.png",
               "/assets/Arcade_characters/hd-valorant-game-omen-character-player-png-733961695115637mjmuwerdpd.png",
               "/assets/Arcade_characters/hd-cypher-valorant-agent-player-character-png-733961695136397ip7azqjn0f.png",
@@ -157,7 +157,7 @@ const EventsPage = () => {
             return (
               <div key={event._id} className="event-card">
                 <div className="event-image-container">
-                  {event.imageUrl ? (
+                  {/* {event.imageUrl ? (
                     <img
                       src={event.imageUrl}
                       alt={event.name}
@@ -169,7 +169,12 @@ const EventsPage = () => {
                       alt={event.name}
                       className="event-image"
                     />
-                  )}
+                  )} */}
+                    <img
+                      src={defaultEventImage}
+                      alt={event.name}
+                      className="event-image"
+                    />
                 </div>
                 <div className="event-details">
                   <div className="character-icon">
