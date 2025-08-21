@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// --- Leveling Configuration (IMPORTANT: This MUST match your game's design) ---
 const getExpForLevel = (level) => {
     if (level <= 1) return 0;
     const BASE_EXP_INCREMENT = 100;
@@ -21,9 +20,7 @@ const getRankForLevel = (level) => {
     if (level >= 2) return 'APPRENTICE';
     return 'BEGINNER';
 };
-// --- END Leveling Configuration ---
 
-// --- NEW: List of fields required for a profile to be considered complete ---
 const REQUIRED_PROFILE_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
 const UserSchema = new mongoose.Schema({
@@ -106,13 +103,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    isProfileComplete: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
-// --- NEW METHOD TO CHECK PROFILE COMPLETION ---
 UserSchema.methods.checkProfileCompletion = function() {
     return REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
 };
-// --- END NEW METHOD ---
 
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password') && this.password) {
@@ -120,13 +119,9 @@ UserSchema.pre('save', async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     
-    // --- SIMPLIFIED LOGIC: Use the new method to set the flag ---
-    // The flag is now always determined by the presence of required fields,
-    // unless it's explicitly set by a controller (e.g., during social login creation).
-    if(this.isNew || this.isModified()){ // Check if any field was modified
+    if(this.isModified()){
         this.isProfileComplete = this.checkProfileCompletion();
     }
-    // --- END SIMPLIFIED LOGIC ---
 
     next();
 });

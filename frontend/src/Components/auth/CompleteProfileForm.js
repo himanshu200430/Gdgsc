@@ -6,7 +6,7 @@ import '../../Pages/AuthForm.css';
 
 const REQUIRED_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
-const CompleteProfileForm = () => {
+const CompleteProfilePage = () => {
     const { user, loading, setUser, needsUsernameSetup } = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
@@ -17,7 +17,6 @@ const CompleteProfileForm = () => {
         if (!loading && !user) {
             navigate('/login');
         } else if (!loading && user && !needsUsernameSetup) {
-            // This is the correct logic: if user is logged in and needsUsernameSetup is false, they are complete.
             navigate('/profile');
         } else if (user) {
             // Initialize form data with existing user data to avoid empty fields
@@ -152,4 +151,4 @@ const CompleteProfileForm = () => {
     );
 };
 
-export default CompleteProfileForm;
+export default CompleteProfilePage;
