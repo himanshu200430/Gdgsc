@@ -12,10 +12,8 @@ export const AuthProvider = ({ children }) => {
         if (token) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             try {
-                // Corrected the API endpoint to the unified route
-                const { data } = await api.get('/api/users/profile');
-                // The corrected controller returns the user object directly
-                setUser(data);
+                const { data } = await api.get('/api/user/profile');
+                setUser(data.user);
             } catch (error) {
                 console.error('Failed to load user profile:', error);
                 localStorage.removeItem('token');
@@ -33,11 +31,10 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         setLoading(true);
         try {
-            // Corrected the API endpoint to the unified route
-            const { data } = await api.post('/api/users/login', { email, password });
+            const { data } = await api.post('/api/auth/login', { email, password });
             localStorage.setItem('token', data.token);
-            setUser(data);
-            return { success: true, user: data };
+            setUser(data.user);
+            return { success: true, user: data.user };
         } catch (error) {
             console.error('Login failed:', error.response?.data?.message || error.message);
             return { success: false, error: error.response?.data?.message || 'Login failed' };
@@ -49,11 +46,10 @@ export const AuthProvider = ({ children }) => {
     const register = async (username, email, password) => {
         setLoading(true);
         try {
-            // Corrected the API endpoint to the unified route
-            const { data } = await api.post('/api/users/register', { username, email, password });
+            const { data } = await api.post('/api/auth/signup', { username, email, password });
             localStorage.setItem('token', data.token);
-            setUser(data);
-            return { success: true, user: data };
+            setUser(data.user);
+            return { success: true, user: data.user };
         } catch (error) {
             console.error('Registration failed:', error.response?.data?.message || error.message);
             return { success: false, error: error.response?.data?.message || 'Registration failed' };
@@ -77,9 +73,6 @@ export const AuthProvider = ({ children }) => {
         setUser,
         isAuthenticated: !!user && !loading,
         isProfileComplete: user && user.isProfileComplete,
-        // Added the missing `needsUsernameSetup` property
-        // It's true if the user exists but their profile is not complete.
-        needsUsernameSetup: user && !user.isProfileComplete,
     };
 
     return (

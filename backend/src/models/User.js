@@ -1,7 +1,9 @@
+// backend/src/models/User.js
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// --- Leveling Configuration (No changes) ---
+// --- Leveling Configuration (IMPORTANT: This MUST match your game's design) ---
 const getExpForLevel = (level) => {
     if (level <= 1) return 0;
     const BASE_EXP_INCREMENT = 100;
@@ -21,8 +23,9 @@ const getRankForLevel = (level) => {
     if (level >= 2) return 'APPRENTICE';
     return 'BEGINNER';
 };
+// --- END Leveling Configuration ---
 
-// --- List of required fields (No changes) ---
+// --- NEW: List of fields required for a profile to be considered complete ---
 const REQUIRED_PROFILE_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
 const UserSchema = new mongoose.Schema({
@@ -75,6 +78,15 @@ const UserSchema = new mongoose.Schema({
         maxlength: 200,
         default: '',
     },
+    profilePicture: {
+        type: String,
+        default: 'https://i.ibb.co/L8G77yW/default-avatar.png',
+    },
+    isProfileComplete: {
+        type: Boolean,
+        default: false,
+    },
+    // --- NEW: Additional Profile Fields ---
     college: {
         type: String,
         default: '',
@@ -105,17 +117,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    // --- ‼️ CRITICAL FIX: Add `isProfileComplete` to the schema ---
-    isProfileComplete: {
-        type: Boolean,
-        default: false,
-    },
+    // --- END NEW FIELDS ---
 }, { timestamps: true });
-
-// --- NEW METHOD TO CHECK PROFILE COMPLETION (No changes) ---
-UserSchema.methods.checkProfileCompletion = function() {
-    return REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
-};
 
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password') && this.password) {
@@ -123,21 +126,29 @@ UserSchema.pre('save', async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     
-    // --- ✅ IMPROVED LOGIC: Ensure the completion flag is always in sync with the data ---
-    this.isProfileComplete = this.checkProfileCompletion();
+    // --- UPDATED LOGIC FOR isProfileComplete ---
+    // A profile is considered complete only if ALL REQUIRED_PROFILE_FIELDS are present and have a value.
+    const isProfileFullyComplete = REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
+    if (this.isModified('isProfileComplete')) {
+      // The flag was explicitly changed, respect it.
+    } else {
+        this.isProfileComplete = isProfileFullyComplete;
+    }
+    // --- END UPDATED LOGIC ---
 
     next();
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {
-    // --- FIX: Added a check for users without a password (e.g., social logins) ---
-    if (!this.password) return false;
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
 UserSchema.methods.addExpAndLevelUp = async function (expGained) {
-    if (expGained === 0) return;
+    if (expGained === 0) {
+        return;
+    }
     this.exp = Math.max(0, this.exp + expGained);
+    console.log(`User ${this.username} adjusted by ${expGained} EXP. Current total EXP: ${this.exp}`);
     let newLevel = this.level;
     while (this.exp >= getExpForLevel(newLevel + 1) && newLevel < 20) {
         newLevel++;
@@ -148,8 +159,10 @@ UserSchema.methods.addExpAndLevelUp = async function (expGained) {
     if (newLevel !== this.level) {
         this.level = newLevel;
         this.rank = getRankForLevel(this.level);
+        console.log(`*** User ${this.username} Level changed to ${this.level}! New Rank: ${this.rank} ***`);
     }
     await this.save();
+    console.log(`User ${this.username}'s profile saved. Final Level: ${this.level}, Final EXP: ${this.exp}`);
 };
 
 const User = mongoose.model('User', UserSchema);
