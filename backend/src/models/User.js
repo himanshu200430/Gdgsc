@@ -1,5 +1,3 @@
-// backend/src/models/User.js
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -78,15 +76,6 @@ const UserSchema = new mongoose.Schema({
         maxlength: 200,
         default: '',
     },
-    profilePicture: {
-        type: String,
-        default: 'https://i.ibb.co/L8G77yW/default-avatar.png',
-    },
-    isProfileComplete: {
-        type: Boolean,
-        default: false,
-    },
-    // --- NEW: Additional Profile Fields ---
     college: {
         type: String,
         default: '',
@@ -117,8 +106,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    // --- END NEW FIELDS ---
 }, { timestamps: true });
+
+// --- NEW METHOD TO CHECK PROFILE COMPLETION ---
+UserSchema.methods.checkProfileCompletion = function() {
+    return REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
+};
+// --- END NEW METHOD ---
 
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password') && this.password) {
@@ -126,15 +120,13 @@ UserSchema.pre('save', async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     
-    // --- UPDATED LOGIC FOR isProfileComplete ---
-    // A profile is considered complete only if ALL REQUIRED_PROFILE_FIELDS are present and have a value.
-    const isProfileFullyComplete = REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
-    if (this.isModified('isProfileComplete')) {
-      // The flag was explicitly changed, respect it.
-    } else {
-        this.isProfileComplete = isProfileFullyComplete;
+    // --- SIMPLIFIED LOGIC: Use the new method to set the flag ---
+    // The flag is now always determined by the presence of required fields,
+    // unless it's explicitly set by a controller (e.g., during social login creation).
+    if(this.isNew || this.isModified()){ // Check if any field was modified
+        this.isProfileComplete = this.checkProfileCompletion();
     }
-    // --- END UPDATED LOGIC ---
+    // --- END SIMPLIFIED LOGIC ---
 
     next();
 });
@@ -144,11 +136,8 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 UserSchema.methods.addExpAndLevelUp = async function (expGained) {
-    if (expGained === 0) {
-        return;
-    }
+    if (expGained === 0) return;
     this.exp = Math.max(0, this.exp + expGained);
-    console.log(`User ${this.username} adjusted by ${expGained} EXP. Current total EXP: ${this.exp}`);
     let newLevel = this.level;
     while (this.exp >= getExpForLevel(newLevel + 1) && newLevel < 20) {
         newLevel++;
@@ -159,10 +148,8 @@ UserSchema.methods.addExpAndLevelUp = async function (expGained) {
     if (newLevel !== this.level) {
         this.level = newLevel;
         this.rank = getRankForLevel(this.level);
-        console.log(`*** User ${this.username} Level changed to ${this.level}! New Rank: ${this.rank} ***`);
     }
     await this.save();
-    console.log(`User ${this.username}'s profile saved. Final Level: ${this.level}, Final EXP: ${this.exp}`);
 };
 
 const User = mongoose.model('User', UserSchema);

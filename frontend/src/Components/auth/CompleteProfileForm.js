@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import api from '../../services/api';
-import '../../Pages/AuthForm.css';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
+import './AuthForm.css';
 
 const REQUIRED_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
-const CompleteProfilePage = () => {
+const CompleteProfileForm = () => {
     const { user, loading, setUser, needsUsernameSetup } = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
@@ -17,33 +17,17 @@ const CompleteProfilePage = () => {
         if (!loading && !user) {
             navigate('/login');
         } else if (!loading && user && !needsUsernameSetup) {
+            // This is the correct logic: if user is logged in and needsUsernameSetup is false, they are complete.
             navigate('/profile');
         } else if (user) {
-            // --- FIX: Re-fetch user data to ensure the state is fresh ---
-            const fetchFreshUser = async () => {
-                try {
-                    const { data } = await api.get('/api/user/profile');
-                    setUser(data);
-                } catch (err) {
-                    console.error("Failed to fetch fresh user data:", err);
-                    // Handle cases where token might be bad, etc.
-                    navigate('/login?error=session_expired');
-                }
-            };
-
-            // Call the refresh logic only if the profile seems incomplete
-            if (needsUsernameSetup) {
-                fetchFreshUser();
-            }
-            // --- END FIX ---
-            
+            // Initialize form data with existing user data to avoid empty fields
             const initialData = {};
             REQUIRED_FIELDS.forEach(field => {
                 initialData[field] = user[field] || '';
             });
             setFormData(initialData);
         }
-    }, [user, loading, needsUsernameSetup, navigate, setUser]); // Added setUser to deps
+    }, [user, loading, needsUsernameSetup, navigate, setUser]);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -54,6 +38,8 @@ const CompleteProfilePage = () => {
     };
 
     const getMissingFields = () => {
+        // This is a robust check for a missing value.
+        // It correctly handles `null`, `undefined`, and empty strings from the user object.
         return REQUIRED_FIELDS.filter(field => {
             const value = user[field];
             return value === null || value === undefined || value === '';
@@ -166,4 +152,4 @@ const CompleteProfilePage = () => {
     );
 };
 
-export default CompleteProfilePage;
+export default CompleteProfileForm;
