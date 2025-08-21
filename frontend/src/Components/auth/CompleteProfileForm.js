@@ -41,9 +41,12 @@ const CompleteProfileForm = ({ setPageError }) => {
         // and to create a more efficient payload.
         const fieldsToUpdate = {};
         for (const key in formData) {
-            // Check if the user object from context has a falsy value for the field.
-            // This is a robust way to check for 'not set' or 'default' values.
-            if (!user[key] && formData[key]) {
+            // Check if the user object from context has a falsy value or empty string for the field.
+            // This properly handles empty strings which are the default values in the User model.
+            const userFieldValue = user[key];
+            const isFieldEmpty = !userFieldValue || (typeof userFieldValue === 'string' && userFieldValue.trim() === '');
+            
+            if (isFieldEmpty && formData[key] && formData[key].trim() !== '') {
                 fieldsToUpdate[key] = formData[key];
             }
         }
@@ -81,7 +84,10 @@ const CompleteProfileForm = ({ setPageError }) => {
         { name: 'branch', label: 'Branch', type: 'text', placeholder: 'e.g., Computer Science' },
     ];
 
-    const fieldsToShow = fields.filter(field => !user?.[field.name]);
+    const fieldsToShow = fields.filter(field => {
+        const userFieldValue = user?.[field.name];
+        return !userFieldValue || (typeof userFieldValue === 'string' && userFieldValue.trim() === '');
+    });
 
     return (
         <form onSubmit={handleSubmit}>

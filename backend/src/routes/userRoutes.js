@@ -150,8 +150,8 @@ router.put('/complete-profile', protect, async (req, res) => {
         // Object to hold the fields we are updating
         const updateFields = {};
 
-        // Update fields only if they are provided and not already set
-        if (username && !user.username) {
+        // Update fields only if they are provided and not already set (handling empty strings properly)
+        if (username && (!user.username || user.username.trim() === '')) {
             // Check for username uniqueness
             const usernameExists = await User.findOne({ username });
             if (usernameExists) {
@@ -160,16 +160,30 @@ router.put('/complete-profile', protect, async (req, res) => {
             updateFields.username = username;
         }
 
-        if (college && !user.college) updateFields.college = college;
+        if (college && (!user.college || user.college.trim() === '')) updateFields.college = college;
         if (graduationYear && !user.graduationYear) updateFields.graduationYear = graduationYear;
-        if (course && !user.course) updateFields.course = course;
-        if (enrollmentNumber && !user.enrollmentNumber) updateFields.enrollmentNumber = enrollmentNumber;
-        if (phoneNumber && !user.phoneNumber) updateFields.phoneNumber = phoneNumber;
-        if (branch && !user.branch) updateFields.branch = branch;
+        if (course && (!user.course || user.course.trim() === '')) updateFields.course = course;
+        if (enrollmentNumber && (!user.enrollmentNumber || user.enrollmentNumber.trim() === '')) updateFields.enrollmentNumber = enrollmentNumber;
+        if (phoneNumber && (!user.phoneNumber || user.phoneNumber.trim() === '')) updateFields.phoneNumber = phoneNumber;
+        if (branch && (!user.branch || user.branch.trim() === '')) updateFields.branch = branch;
 
         // Check if there's anything to update
         if (Object.keys(updateFields).length === 0) {
-            return res.status(400).json({ message: 'No new information provided to update.' });
+            return res.status(400).json({ 
+                message: 'No new information provided to update. All fields appear to be already filled or no valid data was provided.',
+                debug: {
+                    receivedFields: Object.keys(req.body),
+                    userCurrentValues: {
+                        username: user.username || 'empty',
+                        college: user.college || 'empty',
+                        graduationYear: user.graduationYear || 'empty',
+                        course: user.course || 'empty',
+                        enrollmentNumber: user.enrollmentNumber || 'empty',
+                        phoneNumber: user.phoneNumber || 'empty',
+                        branch: user.branch || 'empty'
+                    }
+                }
+            });
         }
         
         // Use findByIdAndUpdate for a single, atomic update operation
