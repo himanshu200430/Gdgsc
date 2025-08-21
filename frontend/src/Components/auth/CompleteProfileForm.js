@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import api from '../../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
+import './AuthForm.css';
 
 const REQUIRED_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
@@ -18,14 +19,31 @@ const CompleteProfilePage = () => {
         } else if (!loading && user && !needsUsernameSetup) {
             navigate('/profile');
         } else if (user) {
-            // Initialize form data with existing user data to avoid empty fields
+            // --- FIX: Re-fetch user data to ensure the state is fresh ---
+            const fetchFreshUser = async () => {
+                try {
+                    const { data } = await api.get('/api/user/profile');
+                    setUser(data);
+                } catch (err) {
+                    console.error("Failed to fetch fresh user data:", err);
+                    // Handle cases where token might be bad, etc.
+                    navigate('/login?error=session_expired');
+                }
+            };
+
+            // Call the refresh logic only if the profile seems incomplete
+            if (needsUsernameSetup) {
+                fetchFreshUser();
+            }
+            // --- END FIX ---
+            
             const initialData = {};
             REQUIRED_FIELDS.forEach(field => {
                 initialData[field] = user[field] || '';
             });
             setFormData(initialData);
         }
-    }, [user, loading, needsUsernameSetup, navigate]);
+    }, [user, loading, needsUsernameSetup, navigate, setUser]); // Added setUser to deps
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -36,7 +54,10 @@ const CompleteProfilePage = () => {
     };
 
     const getMissingFields = () => {
-        return REQUIRED_FIELDS.filter(field => !user[field]);
+        return REQUIRED_FIELDS.filter(field => {
+            const value = user[field];
+            return value === null || value === undefined || value === '';
+        });
     };
 
     const handleSubmit = async (e) => {
@@ -46,17 +67,20 @@ const CompleteProfilePage = () => {
 
         const missingFields = getMissingFields();
         const dataToSend = {};
+        let validationFailed = false;
 
-        // Only send fields that were missing or have been filled in
         missingFields.forEach(field => {
-            if (!formData[field]) {
-                setError(`Please fill all the required fields.`);
-                return;
+            const value = formData[field];
+            if (!value && value !== 0) {
+                validationFailed = true;
             }
-            dataToSend[field] = formData[field];
+            dataToSend[field] = value;
         });
 
-        if (error) return; // Prevent API call if validation failed
+        if (validationFailed) {
+            setError('Please fill all the required fields.');
+            return;
+        }
 
         try {
             const { data } = await api.put('/api/users/complete-profile', dataToSend);
@@ -94,14 +118,14 @@ const CompleteProfilePage = () => {
                             <label htmlFor={field}>
                                 {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}:
                             </label>
-                            {field === 'bio' || field === 'course' || field === 'branch' || field === 'college' ? (
-                                <input
-                                    type="text"
+                            {field === 'bio' ? (
+                                <textarea
                                     id={field}
                                     name={field}
                                     value={formData[field]}
                                     onChange={handleChange}
                                     required
+                                    rows="4"
                                 />
                             ) : field === 'graduationYear' ? (
                                 <input
@@ -113,6 +137,15 @@ const CompleteProfilePage = () => {
                                     required
                                     min="1900"
                                     max="2100"
+                                />
+                            ) : field === 'phoneNumber' ? (
+                                <input
+                                    type="tel"
+                                    id={field}
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    required
                                 />
                             ) : (
                                 <input
