@@ -23,10 +23,10 @@ router.get('/profile', protect, async (req, res) => {
                 bio: req.user.bio,
                 createdAt: req.user.createdAt,
                 isProfileComplete: req.user.isProfileComplete,
-                exp: req.user.exp,      // NEW
-                level: req.user.level,  // NEW
-                rank: req.user.rank,    // NEW
-                role: req.user.role     // NEW
+                exp: req.user.exp,
+                level: req.user.level,
+                rank: req.user.rank,
+                role: req.user.role
             }
         });
     } catch (error) {
@@ -67,10 +67,10 @@ router.put('/profile', protect, async (req, res) => {
                     profilePicture: updatedUser.profilePicture,
                     bio: updatedUser.bio,
                     isProfileComplete: updatedUser.isProfileComplete,
-                    exp: updatedUser.exp,      // NEW
-                    level: updatedUser.level,  // NEW
-                    rank: updatedUser.rank,    // NEW
-                    role: updatedUser.role     // NEW
+                    exp: updatedUser.exp,
+                    level: updatedUser.level,
+                    rank: updatedUser.rank,
+                    role: updatedUser.role
                 }
             });
         } else {
@@ -121,15 +121,75 @@ router.put('/set-username', protect, async (req, res) => {
                 profilePicture: user.profilePicture,
                 bio: user.bio,
                 isProfileComplete: user.isProfileComplete,
-                exp: user.exp,      // NEW
-                level: user.level,  // NEW
-                rank: user.rank,    // NEW
-                role: user.role     // NEW
+                exp: user.exp,
+                level: user.level,
+                rank: user.rank,
+                role: user.role
             }
         });
     } catch (error) {
         console.error('Error setting username:', error);
         res.status(500).json({ message: 'Server error setting username.' });
+    }
+});
+
+// @route   PUT /api/user/complete-profile
+// @desc    Completes a new user's profile with full details
+// @access  Private (requires JWT)
+router.put('/complete-profile', protect, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { username, college, graduationYear, course, enrollmentNumber, phoneNumber, branch } = req.body;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Object to hold the fields we are updating
+        const updateFields = {};
+
+        // Update fields only if they are provided and not already set
+        if (username && !user.username) {
+            // Check for username uniqueness
+            const usernameExists = await User.findOne({ username });
+            if (usernameExists) {
+                return res.status(400).json({ message: 'Username already taken.' });
+            }
+            updateFields.username = username;
+        }
+
+        if (college && !user.college) updateFields.college = college;
+        if (graduationYear && !user.graduationYear) updateFields.graduationYear = graduationYear;
+        if (course && !user.course) updateFields.course = course;
+        if (enrollmentNumber && !user.enrollmentNumber) updateFields.enrollmentNumber = enrollmentNumber;
+        if (phoneNumber && !user.phoneNumber) updateFields.phoneNumber = phoneNumber;
+        if (branch && !user.branch) updateFields.branch = branch;
+
+        // Check if there's anything to update
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({ message: 'No new information provided to update.' });
+        }
+        
+        // Use findByIdAndUpdate for a single, atomic update operation
+        const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: true });
+
+        // Check if the profile is now complete
+        const isProfileComplete = updatedUser.username && updatedUser.college && updatedUser.graduationYear && updatedUser.course && updatedUser.enrollmentNumber && updatedUser.phoneNumber && updatedUser.branch;
+        if (isProfileComplete !== updatedUser.isProfileComplete) {
+            updatedUser.isProfileComplete = isProfileComplete;
+            await updatedUser.save(); // Save again to update the isProfileComplete flag
+        }
+
+        res.status(200).json({
+            message: 'Profile updated successfully!',
+            user: updatedUser,
+        });
+
+    } catch (error) {
+        console.error('Error completing user profile:', error);
+        res.status(500).json({ message: 'Server error completing profile.' });
     }
 });
 
@@ -158,6 +218,5 @@ router.put('/:id/set-admin', protect, admin, async (req, res) => {
         res.status(500).json({ message: 'Server error setting user as admin.' });
     }
 });
-
 
 module.exports = router;

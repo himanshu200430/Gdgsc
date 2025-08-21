@@ -101,13 +101,18 @@ const UserSchema = new mongoose.Schema({
     enrollmentNumber: {
         type: String,
         unique: true,
+        default: '',
     },
     phoneNumber: {
         type: String,
         unique: true,
+        default: '',
+
     },
     branch: {
         type:String,
+        default: '',
+
     }
 
 }, { timestamps: true });
