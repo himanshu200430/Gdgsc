@@ -7,13 +7,15 @@ const CompleteProfileForm = ({ setPageError }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
-    // Redirect user if profile is already complete
+    // Effect to handle redirection based on the user object's state
     useEffect(() => {
+        // Only redirect if the user object exists and their profile is complete
         if (user && user.isProfileComplete) {
             navigate('/profile', { replace: true });
         }
     }, [user, navigate]);
 
+    // Initialize formData with current user data
     const [formData, setFormData] = useState({
         username: user?.username || '',
         college: user?.college || '',
@@ -60,9 +62,15 @@ const CompleteProfileForm = ({ setPageError }) => {
         }
 
         try {
+            // The key is that the backend must send back the updated user object,
+            // including the new isProfileComplete flag.
             const { data } = await api.put('/api/user/complete-profile', fieldsToUpdate);
+            
+            // This call to setUser() is critical. It updates the AuthContext,
+            // which in turn triggers the useEffect() hook above.
             setUser(data.user);
-            setSuccessMessage('Profile updated successfully! Redirecting...');
+            
+            setSuccessMessage('Profile updated successfully!');
         } catch (err) {
             console.error('Error updating profile:', err.response?.data?.message || err.message);
             setError(err.response?.data?.message || 'Failed to update profile. Please try again.');
@@ -82,9 +90,16 @@ const CompleteProfileForm = ({ setPageError }) => {
     ];
 
     const fieldsToShow = fields.filter(field => {
+        // Ensure that we are filtering out fields with non-empty values
         const userFieldValue = user?.[field.name];
         return !userFieldValue || (typeof userFieldValue === 'string' && userFieldValue.trim() === '');
     });
+
+    if (user && user.isProfileComplete) {
+        // This is a safety check to avoid rendering the form if the user is complete,
+        // in case the useEffect hook is slow to run.
+        return <p className="success-message">Your profile is already complete! Redirecting...</p>;
+    }
 
     return (
         <form onSubmit={handleSubmit}>
