@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         isAuthenticated: !!user && !loading,
         isProfileComplete: user && user.isProfileComplete,
+        needsUsernameSetup: user && !user.isProfileComplete,
     };
 
     return (
