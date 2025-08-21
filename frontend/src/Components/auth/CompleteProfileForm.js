@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
@@ -6,6 +6,13 @@ import api from '../../services/api';
 const CompleteProfileForm = ({ setPageError }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
+
+    // Redirect user if profile is already complete
+    useEffect(() => {
+        if (user && user.isProfileComplete) {
+            navigate('/profile', { replace: true });
+        }
+    }, [user, navigate]);
 
     const [formData, setFormData] = useState({
         username: user?.username || '',
@@ -38,7 +45,6 @@ const CompleteProfileForm = ({ setPageError }) => {
 
         const fieldsToUpdate = {};
         for (const key in formData) {
-            // Convert to string and trim to handle different empty states consistently
             const currentValue = String(user[key] || '').trim();
             const newValue = String(formData[key] || '').trim();
 
@@ -48,9 +54,8 @@ const CompleteProfileForm = ({ setPageError }) => {
         }
         
         if (Object.keys(fieldsToUpdate).length === 0) {
-            setSuccessMessage('Your profile is already complete or no changes were made!');
+            setSuccessMessage('No new information provided to update.');
             setIsSubmitting(false);
-            setTimeout(() => navigate('/profile', { replace: true }), 1200);
             return;
         }
 
@@ -58,9 +63,6 @@ const CompleteProfileForm = ({ setPageError }) => {
             const { data } = await api.put('/api/user/complete-profile', fieldsToUpdate);
             setUser(data.user);
             setSuccessMessage('Profile updated successfully! Redirecting...');
-            setTimeout(() => {
-                navigate('/profile', { replace: true });
-            }, 1200);
         } catch (err) {
             console.error('Error updating profile:', err.response?.data?.message || err.message);
             setError(err.response?.data?.message || 'Failed to update profile. Please try again.');

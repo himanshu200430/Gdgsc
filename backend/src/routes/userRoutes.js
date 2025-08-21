@@ -142,15 +142,11 @@ router.put('/complete-profile', protect, async (req, res) => {
         const { username, college, graduationYear, course, enrollmentNumber, phoneNumber, branch } = req.body;
 
         const user = await User.findById(userId);
-
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
 
         const updateFields = {};
-
-        // Only update fields that are provided in the request body
-        // and are not already set in the user object
         if (username && (!user.username || user.username.trim() === '')) {
             const usernameExists = await User.findOne({ username });
             if (usernameExists) {
@@ -158,7 +154,6 @@ router.put('/complete-profile', protect, async (req, res) => {
             }
             updateFields.username = username;
         }
-
         if (college && (!user.college || user.college.trim() === '')) updateFields.college = college;
         if (graduationYear && !user.graduationYear) updateFields.graduationYear = graduationYear;
         if (course && (!user.course || user.course.trim() === '')) updateFields.course = course;
@@ -167,29 +162,18 @@ router.put('/complete-profile', protect, async (req, res) => {
         if (branch && (!user.branch || user.branch.trim() === '')) updateFields.branch = branch;
 
         if (Object.keys(updateFields).length === 0) {
-            return res.status(400).json({
-                message: 'No new information provided to update.',
-                // Debugging info to help identify the problem
-                debug: {
-                    receivedPayload: req.body,
-                    userProfile: {
-                        username: user.username,
-                        college: user.college,
-                        graduationYear: user.graduationYear,
-                        course: user.course,
-                        enrollmentNumber: user.enrollmentNumber,
-                        phoneNumber: user.phoneNumber,
-                        branch: user.branch
-                    }
-                }
-            });
+            return res.status(400).json({ message: 'No new information provided to update.' });
         }
         
+        // Update user and get the new document
         const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: true });
 
+        // Check if all fields are now populated
         const isProfileComplete = updatedUser.username && updatedUser.college && updatedUser.graduationYear && updatedUser.course && updatedUser.enrollmentNumber && updatedUser.phoneNumber && updatedUser.branch;
-        if (isProfileComplete !== updatedUser.isProfileComplete) {
-            updatedUser.isProfileComplete = isProfileComplete;
+        
+        // If the profile is complete, set the flag
+        if (isProfileComplete) {
+            updatedUser.isProfileComplete = true;
             await updatedUser.save();
         }
 
