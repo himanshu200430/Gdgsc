@@ -7,7 +7,6 @@ const CompleteProfileForm = ({ setPageError }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
-    // Initialize state for each field, only if it's not already set
     const [formData, setFormData] = useState({
         username: user?.username || '',
         college: user?.college || '',
@@ -37,23 +36,19 @@ const CompleteProfileForm = ({ setPageError }) => {
         setPageError('');
         setIsSubmitting(true);
 
-        // Filter out fields that are already filled to avoid sending them again
-        // and to create a more efficient payload.
         const fieldsToUpdate = {};
         for (const key in formData) {
-            // Check if the user object from context has a falsy value or empty string for the field.
-            // This properly handles empty strings which are the default values in the User model.
-            const userFieldValue = user[key];
-            const isFieldEmpty = !userFieldValue || (typeof userFieldValue === 'string' && userFieldValue.trim() === '');
-            
-            if (isFieldEmpty && formData[key] && formData[key].trim() !== '') {
+            // Convert to string and trim to handle different empty states consistently
+            const currentValue = String(user[key] || '').trim();
+            const newValue = String(formData[key] || '').trim();
+
+            if (newValue !== currentValue && newValue !== '') {
                 fieldsToUpdate[key] = formData[key];
             }
         }
         
-        // If no fields need updating, show a message and prevent API call.
         if (Object.keys(fieldsToUpdate).length === 0) {
-            setSuccessMessage('Your profile is already complete! Redirecting...');
+            setSuccessMessage('Your profile is already complete or no changes were made!');
             setIsSubmitting(false);
             setTimeout(() => navigate('/profile', { replace: true }), 1200);
             return;
