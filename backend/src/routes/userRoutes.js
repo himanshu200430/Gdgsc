@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
-const admin = require('../middleware/adminMiddleware'); // Import admin middleware
+const admin = require('../middleware/adminMiddleware');
 const User = require('../models/User');
 
 // @route   GET /api/user/profile
@@ -109,7 +109,7 @@ router.put('/set-username', protect, async (req, res) => {
         }
 
         user.username = username;
-        user.isProfileComplete = false; // Mark setup as complete
+        user.isProfileComplete = false;
         await user.save();
 
         res.status(200).json({
@@ -147,12 +147,11 @@ router.put('/complete-profile', protect, async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        // Object to hold the fields we are updating
         const updateFields = {};
 
-        // Update fields only if they are provided and not already set (handling empty strings properly)
+        // Only update fields that are provided in the request body
+        // and are not already set in the user object
         if (username && (!user.username || user.username.trim() === '')) {
-            // Check for username uniqueness
             const usernameExists = await User.findOne({ username });
             if (usernameExists) {
                 return res.status(400).json({ message: 'Username already taken.' });
@@ -167,33 +166,31 @@ router.put('/complete-profile', protect, async (req, res) => {
         if (phoneNumber && (!user.phoneNumber || user.phoneNumber.trim() === '')) updateFields.phoneNumber = phoneNumber;
         if (branch && (!user.branch || user.branch.trim() === '')) updateFields.branch = branch;
 
-        // Check if there's anything to update
         if (Object.keys(updateFields).length === 0) {
-            return res.status(400).json({ 
-                message: 'No new information provided to update. All fields appear to be already filled or no valid data was provided.',
+            return res.status(400).json({
+                message: 'No new information provided to update.',
+                // Debugging info to help identify the problem
                 debug: {
-                    receivedFields: Object.keys(req.body),
-                    userCurrentValues: {
-                        username: user.username || 'empty',
-                        college: user.college || 'empty',
-                        graduationYear: user.graduationYear || 'empty',
-                        course: user.course || 'empty',
-                        enrollmentNumber: user.enrollmentNumber || 'empty',
-                        phoneNumber: user.phoneNumber || 'empty',
-                        branch: user.branch || 'empty'
+                    receivedPayload: req.body,
+                    userProfile: {
+                        username: user.username,
+                        college: user.college,
+                        graduationYear: user.graduationYear,
+                        course: user.course,
+                        enrollmentNumber: user.enrollmentNumber,
+                        phoneNumber: user.phoneNumber,
+                        branch: user.branch
                     }
                 }
             });
         }
         
-        // Use findByIdAndUpdate for a single, atomic update operation
         const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: true });
 
-        // Check if the profile is now complete
         const isProfileComplete = updatedUser.username && updatedUser.college && updatedUser.graduationYear && updatedUser.course && updatedUser.enrollmentNumber && updatedUser.phoneNumber && updatedUser.branch;
         if (isProfileComplete !== updatedUser.isProfileComplete) {
             updatedUser.isProfileComplete = isProfileComplete;
-            await updatedUser.save(); // Save again to update the isProfileComplete flag
+            await updatedUser.save();
         }
 
         res.status(200).json({
@@ -202,14 +199,14 @@ router.put('/complete-profile', protect, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error completing user profile:', error);
+        console.error('Error completing user profile:', error.stack || error);
         res.status(500).json({ message: 'Server error completing profile.' });
     }
 });
 
 // @route   PUT /api/user/:id/set-admin
 // @desc    Set a user's role to admin (for initial admin setup)
-// @access  Private (Admin only) - You'll need an initial admin user created manually or via a seed script
+// @access  Private (Admin only)
 router.put('/:id/set-admin', protect, admin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
