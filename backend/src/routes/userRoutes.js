@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
-const admin = require('../middleware/adminMiddleware');
+const admin = require('../middleware/adminMiddleware'); // Import admin middleware
 const User = require('../models/User');
 
 // @route   GET /api/user/profile
@@ -23,10 +23,10 @@ router.get('/profile', protect, async (req, res) => {
                 bio: req.user.bio,
                 createdAt: req.user.createdAt,
                 isProfileComplete: req.user.isProfileComplete,
-                exp: req.user.exp,
-                level: req.user.level,
-                rank: req.user.rank,
-                role: req.user.role
+                exp: req.user.exp,      // NEW
+                level: req.user.level,  // NEW
+                rank: req.user.rank,    // NEW
+                role: req.user.role     // NEW
             }
         });
     } catch (error) {
@@ -67,10 +67,10 @@ router.put('/profile', protect, async (req, res) => {
                     profilePicture: updatedUser.profilePicture,
                     bio: updatedUser.bio,
                     isProfileComplete: updatedUser.isProfileComplete,
-                    exp: updatedUser.exp,
-                    level: updatedUser.level,
-                    rank: updatedUser.rank,
-                    role: updatedUser.role
+                    exp: updatedUser.exp,      // NEW
+                    level: updatedUser.level,  // NEW
+                    rank: updatedUser.rank,    // NEW
+                    role: updatedUser.role     // NEW
                 }
             });
         } else {
@@ -109,7 +109,7 @@ router.put('/set-username', protect, async (req, res) => {
         }
 
         user.username = username;
-        user.isProfileComplete = false;
+        user.isProfileComplete = false; // Mark setup as complete
         await user.save();
 
         res.status(200).json({
@@ -121,10 +121,10 @@ router.put('/set-username', protect, async (req, res) => {
                 profilePicture: user.profilePicture,
                 bio: user.bio,
                 isProfileComplete: user.isProfileComplete,
-                exp: user.exp,
-                level: user.level,
-                rank: user.rank,
-                role: user.role
+                exp: user.exp,      // NEW
+                level: user.level,  // NEW
+                rank: user.rank,    // NEW
+                role: user.role     // NEW
             }
         });
     } catch (error) {
@@ -133,64 +133,9 @@ router.put('/set-username', protect, async (req, res) => {
     }
 });
 
-// @route   PUT /api/user/complete-profile
-// @desc    Completes a new user's profile with full details
-// @access  Private (requires JWT)
-router.put('/complete-profile', protect, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const { username, college, graduationYear, course, enrollmentNumber, phoneNumber, branch } = req.body;
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
-        }
-
-        const updateFields = {};
-        if (username && (!user.username || user.username.trim() === '')) {
-            const usernameExists = await User.findOne({ username });
-            if (usernameExists) {
-                return res.status(400).json({ message: 'Username already taken.' });
-            }
-            updateFields.username = username;
-        }
-        if (college && (!user.college || user.college.trim() === '')) updateFields.college = college;
-        if (graduationYear && !user.graduationYear) updateFields.graduationYear = graduationYear;
-        if (course && (!user.course || user.course.trim() === '')) updateFields.course = course;
-        if (enrollmentNumber && (!user.enrollmentNumber || user.enrollmentNumber.trim() === '')) updateFields.enrollmentNumber = enrollmentNumber;
-        if (phoneNumber && (!user.phoneNumber || user.phoneNumber.trim() === '')) updateFields.phoneNumber = phoneNumber;
-        if (branch && (!user.branch || user.branch.trim() === '')) updateFields.branch = branch;
-
-        if (Object.keys(updateFields).length === 0) {
-            return res.status(400).json({ message: 'No new information provided to update.' });
-        }
-        
-        // Update user and get the new document
-        const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: true });
-
-        // Check if all fields are now populated
-        const isProfileComplete = updatedUser.username && updatedUser.college && updatedUser.graduationYear && updatedUser.course && updatedUser.enrollmentNumber && updatedUser.phoneNumber && updatedUser.branch;
-        
-        // If the profile is complete, set the flag
-        if (isProfileComplete) {
-            updatedUser.isProfileComplete = true;
-            await updatedUser.save();
-        }
-
-        res.status(200).json({
-            message: 'Profile updated successfully!',
-            user: updatedUser,
-        });
-
-    } catch (error) {
-        console.error('Error completing user profile:', error.stack || error);
-        res.status(500).json({ message: 'Server error completing profile.' });
-    }
-});
-
 // @route   PUT /api/user/:id/set-admin
 // @desc    Set a user's role to admin (for initial admin setup)
-// @access  Private (Admin only)
+// @access  Private (Admin only) - You'll need an initial admin user created manually or via a seed script
 router.put('/:id/set-admin', protect, admin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -213,5 +158,6 @@ router.put('/:id/set-admin', protect, admin, async (req, res) => {
         res.status(500).json({ message: 'Server error setting user as admin.' });
     }
 });
+
 
 module.exports = router;

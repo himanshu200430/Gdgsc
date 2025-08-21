@@ -2,9 +2,8 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { type } = require('express/lib/response');
 
-// --- Leveling Configuration (keep this as is) ---
+// --- Leveling Configuration (IMPORTANT: This MUST match your game's design) ---
 const getExpForLevel = (level) => {
     if (level <= 1) return 0;
     const BASE_EXP_INCREMENT = 100;
@@ -25,6 +24,9 @@ const getRankForLevel = (level) => {
     return 'BEGINNER';
 };
 // --- END Leveling Configuration ---
+
+// --- NEW: List of fields required for a profile to be considered complete ---
+const REQUIRED_PROFILE_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
 const UserSchema = new mongoose.Schema({
     email: {
@@ -84,7 +86,8 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    college:{
+    // --- NEW: Additional Profile Fields ---
+    college: {
         type: String,
         default: '',
     },
@@ -94,61 +97,44 @@ const UserSchema = new mongoose.Schema({
         max: 2100,
         default: null,
     },
-    course:{
-        type:String,
+    course: {
+        type: String,
         default: '',
     },
     enrollmentNumber: {
         type: String,
         unique: true,
-        default: '',
+        sparse: true,
+        default: null,
     },
     phoneNumber: {
         type: String,
         unique: true,
-        default: '',
-
+        sparse: true,
+        default: null,
     },
     branch: {
-        type:String,
+        type: String,
         default: '',
-
-    }
-
+    },
+    // --- END NEW FIELDS ---
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {
-    // Hash password only if it's modified and present
     if (this.isModified('password') && this.password) {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
     }
-
-    // --- CRUCIAL CHANGE FOR isProfileComplete LOGIC ---
-    // If the user is new AND they are a social login (no username initially),
-    // ensure isProfileComplete remains false.
-    if (this.isNew && (this.googleId || this.discordId) && !this.username) {
-        this.isProfileComplete = false;
+    
+    // --- UPDATED LOGIC FOR isProfileComplete ---
+    // A profile is considered complete only if ALL REQUIRED_PROFILE_FIELDS are present and have a value.
+    const isProfileFullyComplete = REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
+    if (this.isModified('isProfileComplete')) {
+      // The flag was explicitly changed, respect it.
+    } else {
+        this.isProfileComplete = isProfileFullyComplete;
     }
-    // If a username is being set or updated, then the profile is considered complete.
-    // This handles both initial registration with username and subsequent profile completion.
-    else if (this.isModified('username') && this.username) {
-        this.isProfileComplete = true;
-    }
-    // If username is explicitly set to null/empty, set isProfileComplete to false
-    else if (this.isModified('username') && !this.username) {
-        this.isProfileComplete = false;
-    }
-    // For existing users where username isn't being modified,
-    // ensure isProfileComplete is true if a username exists
-    else if (!this.isNew && this.username) {
-        this.isProfileComplete = true;
-    }
-    // If an existing user somehow loses their username, set to false
-    else if (!this.isNew && !this.username) {
-        this.isProfileComplete = false;
-    }
-    // --- END CRUCIAL CHANGE ---
+    // --- END UPDATED LOGIC ---
 
     next();
 });
@@ -161,31 +147,20 @@ UserSchema.methods.addExpAndLevelUp = async function (expGained) {
     if (expGained === 0) {
         return;
     }
-
     this.exp = Math.max(0, this.exp + expGained);
-
     console.log(`User ${this.username} adjusted by ${expGained} EXP. Current total EXP: ${this.exp}`);
-
-    let leveledUp = false;
-    let levelChanged = false;
-
     let newLevel = this.level;
     while (this.exp >= getExpForLevel(newLevel + 1) && newLevel < 20) {
         newLevel++;
-        levelChanged = true;
     }
     while (this.exp < getExpForLevel(newLevel) && newLevel > 1) {
         newLevel--;
-        levelChanged = true;
     }
-
     if (newLevel !== this.level) {
         this.level = newLevel;
         this.rank = getRankForLevel(this.level);
-        leveledUp = true;
         console.log(`*** User ${this.username} Level changed to ${this.level}! New Rank: ${this.rank} ***`);
     }
-
     await this.save();
     console.log(`User ${this.username}'s profile saved. Final Level: ${this.level}, Final EXP: ${this.exp}`);
 };

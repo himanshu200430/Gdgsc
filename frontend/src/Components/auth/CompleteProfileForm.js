@@ -1,139 +1,137 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import api from '../../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
+import './AuthForm.css';
 
-const CompleteProfileForm = ({ setPageError }) => {
-    const { user, setUser } = useAuth();
+const REQUIRED_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
+
+const CompleteProfilePage = () => {
+    const { user, loading, setUser, needsUsernameSetup } = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log(user)
-    },[])
-
-    // Effect to handle redirection based on the user object's state
-    useEffect(() => {
-        // Only redirect if the user object exists and their profile is complete
-        if (user && user.isProfileComplete) {
-            navigate('/profile', { replace: true });
-        }
-    }, [user, navigate]);
-
-    // Initialize formData with current user data
-    const [formData, setFormData] = useState({
-        username: user?.username || '',
-        college: user?.college || '',
-        graduationYear: user?.graduationYear || '',
-        course: user?.course || '',
-        enrollmentNumber: user?.enrollmentNumber || '',
-        phoneNumber: user?.phoneNumber || '',
-        branch: user?.branch || '',
-    });
-
+    const [formData, setFormData] = useState({});
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [success, setSuccess] = useState('');
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
+    useEffect(() => {
+        if (!loading && !user) {
+            navigate('/login');
+        } else if (!loading && user && !needsUsernameSetup) {
+            navigate('/profile');
+        } else if (user) {
+            // Initialize form data with existing user data to avoid empty fields
+            const initialData = {};
+            REQUIRED_FIELDS.forEach(field => {
+                initialData[field] = user[field] || '';
+            });
+            setFormData(initialData);
+        }
+    }, [user, loading, needsUsernameSetup, navigate]);
+
+    const handleChange = (e) => {
+        const { name, value, type } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === 'number' ? parseInt(value) : value,
+        });
+    };
+
+    const getMissingFields = () => {
+        return REQUIRED_FIELDS.filter(field => !user[field]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccessMessage('');
-        setPageError('');
-        setIsSubmitting(true);
+        setSuccess('');
 
-        const fieldsToUpdate = {};
-        for (const key in formData) {
-            const currentValue = String(user[key] || '').trim();
-            const newValue = String(formData[key] || '').trim();
+        const missingFields = getMissingFields();
+        const dataToSend = {};
 
-            if (newValue !== currentValue && newValue !== '') {
-                fieldsToUpdate[key] = formData[key];
+        // Only send fields that were missing or have been filled in
+        missingFields.forEach(field => {
+            if (!formData[field]) {
+                setError(`Please fill all the required fields.`);
+                return;
             }
-        }
-        
-        if (Object.keys(fieldsToUpdate).length === 0) {
-            setSuccessMessage('No new information provided to update.');
-            setIsSubmitting(false);
-            return;
-        }
+            dataToSend[field] = formData[field];
+        });
+
+        if (error) return; // Prevent API call if validation failed
 
         try {
-            // The key is that the backend must send back the updated user object,
-            // including the new isProfileComplete flag.
-            const { data } = await api.put('/api/user/complete-profile', fieldsToUpdate);
-            
-            // This call to setUser() is critical. It updates the AuthContext,
-            // which in turn triggers the useEffect() hook above.
+            const { data } = await api.put('/api/users/complete-profile', dataToSend);
             setUser(data.user);
-            
-            setSuccessMessage('Profile updated successfully!');
+            setSuccess('Profile updated successfully! Redirecting...');
+            setTimeout(() => {
+                navigate('/profile');
+            }, 1500);
         } catch (err) {
-            console.error('Error updating profile:', err.response?.data?.message || err.message);
-            setError(err.response?.data?.message || 'Failed to update profile. Please try again.');
-        } finally {
-            setIsSubmitting(false);
+            console.error('Error completing profile:', err.response?.data?.message || err.message);
+            setError(err.response?.data?.message || 'Failed to complete profile.');
         }
     };
 
-    const fields = [
-        { name: 'username', label: 'Choose Your Username', type: 'text', placeholder: 'Enter a unique username' },
-        { name: 'college', label: 'College', type: 'text', placeholder: 'Your college name' },
-        { name: 'graduationYear', label: 'Graduation Year', type: 'number', placeholder: 'e.g., 2024' },
-        { name: 'course', label: 'Course', type: 'text', placeholder: 'e.g., B.Tech, B.Sc.' },
-        { name: 'enrollmentNumber', label: 'Enrollment Number', type: 'text', placeholder: 'Your enrollment number' },
-        { name: 'phoneNumber', label: 'Phone Number', type: 'tel', placeholder: 'Your phone number' },
-        { name: 'branch', label: 'Branch', type: 'text', placeholder: 'e.g., Computer Science' },
-    ];
-
-    const fieldsToShow = fields.filter(field => {
-        // Ensure that we are filtering out fields with non-empty values
-        const userFieldValue = user?.[field.name];
-        return !userFieldValue || (typeof userFieldValue === 'string' && userFieldValue.trim() === '');
-    });
-
-    if (user && user.isProfileComplete) {
-        // This is a safety check to avoid rendering the form if the user is complete,
-        // in case the useEffect hook is slow to run.
-        return <p className="success-message">Your profile is already complete! Redirecting...</p>;
+    if (loading || (!user && !loading)) {
+        return <div className="auth-container">Loading...</div>;
     }
 
+    if (!needsUsernameSetup) {
+        return <div className="auth-container">Your profile is already complete.</div>;
+    }
+
+    const missingFields = getMissingFields();
+
     return (
-        <form onSubmit={handleSubmit}>
-            {fieldsToShow.length > 0 ? (
-                fieldsToShow.map(field => (
-                    <div className="form-group" key={field.name}>
-                        <label htmlFor={field.name}>{field.label}:</label>
-                        <input
-                            type={field.type}
-                            id={field.name}
-                            name={field.name}
-                            placeholder={field.placeholder}
-                            value={formData[field.name]}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                ))
-            ) : (
-                <p className="success-message">Your profile is already complete! Redirecting...</p>
-            )}
-            {error && <p className="error-message">{error}</p>}
-            {successMessage && <p className="success-message">{successMessage}</p>}
-            {fieldsToShow.length > 0 && (
-                <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
-                    {isSubmitting ? 'Saving...' : 'Complete Profile'}
-                </button>
-            )}
-        </form>
+        <div className="auth-container">
+            <div className="auth-form-card">
+                <h2>Complete Your Profile</h2>
+                <p>Please provide the following details to continue:</p>
+                {error && <p className="error-message">{error}</p>}
+                {success && <p className="success-message">{success}</p>}
+                <form onSubmit={handleSubmit}>
+                    {missingFields.map(field => (
+                        <div className="form-group" key={field}>
+                            <label htmlFor={field}>
+                                {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}:
+                            </label>
+                            {field === 'bio' || field === 'course' || field === 'branch' || field === 'college' ? (
+                                <input
+                                    type="text"
+                                    id={field}
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            ) : field === 'graduationYear' ? (
+                                <input
+                                    type="number"
+                                    id={field}
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    required
+                                    min="1900"
+                                    max="2100"
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    id={field}
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            )}
+                        </div>
+                    ))}
+                    <button type="submit" className="auth-submit-btn">Complete Profile</button>
+                </form>
+            </div>
+        </div>
     );
 };
 
-export default CompleteProfileForm;
+export default CompleteProfilePage;
