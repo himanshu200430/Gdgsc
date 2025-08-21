@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { type } = require('express/lib/response');
 
 // --- Leveling Configuration (keep this as is) ---
 const getExpForLevel = (level) => {
@@ -83,6 +84,32 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    college:{
+        type: String,
+        default: '',
+    },
+    graduationYear: {
+        type: Number,
+        min: 1900,
+        max: 2100,
+        default: null,
+    },
+    course:{
+        type:String,
+        default: '',
+    },
+    enrollmentNumber: {
+        type: String,
+        unique: true,
+    },
+    phoneNumber: {
+        type: String,
+        unique: true,
+    },
+    branch: {
+        type:String,
+    }
+
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {
