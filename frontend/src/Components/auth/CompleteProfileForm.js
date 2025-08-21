@@ -6,43 +6,44 @@ import '../../Pages/AuthForm.css';
 
 const REQUIRED_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
-const CompleteProfilePage = () => {
-    const { user, loading, setUser, needsUsernameSetup } = useAuth();
+const CompleteProfileForm = () => {
+    const { user, loading, setUser } = useAuth(); // Removed `needsUsernameSetup`
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    // --- ✅ FIX: Refactored useEffect to rely on the single source of truth: `user.isProfileComplete` ---
     useEffect(() => {
-        if (!loading && !user) {
-            navigate('/login');
-        } else if (!loading && user && !needsUsernameSetup) {
-            navigate('/profile');
-        } else if (user) {
-            // Initialize form data with existing user data to avoid empty fields
+        if (loading) {
+            return; // Wait until loading is finished
+        }
+        if (!user) {
+            navigate('/login'); // If no user, send to login
+        } else if (user.isProfileComplete) {
+            navigate('/profile'); // If profile is complete, send to profile
+        } else {
+            // Otherwise, populate form with existing data
             const initialData = {};
             REQUIRED_FIELDS.forEach(field => {
                 initialData[field] = user[field] || '';
             });
             setFormData(initialData);
         }
-    }, [user, loading, needsUsernameSetup, navigate, setUser]);
+    }, [user, loading, navigate]);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
         setFormData({
             ...formData,
-            [name]: type === 'number' ? parseInt(value) : value,
+            [name]: type === 'number' ? value : value,
         });
     };
 
     const getMissingFields = () => {
-        // This is a robust check for a missing value.
-        // It correctly handles `null`, `undefined`, and empty strings from the user object.
-        return REQUIRED_FIELDS.filter(field => {
-            const value = user[field];
-            return value === null || value === undefined || value === '';
-        });
+        if (!user) return [];
+        // Filter the required list to find fields that are empty on the user object
+        return REQUIRED_FIELDS.filter(field => !user[field]);
     };
 
     const handleSubmit = async (e) => {
@@ -50,42 +51,32 @@ const CompleteProfilePage = () => {
         setError('');
         setSuccess('');
 
-        const missingFields = getMissingFields();
-        const dataToSend = {};
-        let validationFailed = false;
-
-        missingFields.forEach(field => {
-            const value = formData[field];
-            if (!value && value !== 0) {
-                validationFailed = true;
+        // Basic validation
+        for (const field of getMissingFields()) {
+            if (!formData[field]) {
+                setError(`Please fill out the ${field} field.`);
+                return;
             }
-            dataToSend[field] = value;
-        });
-
-        if (validationFailed) {
-            setError('Please fill all the required fields.');
-            return;
         }
 
         try {
-            const { data } = await api.put('/api/users/complete-profile', dataToSend);
-            setUser(data.user);
+            // --- ✅ FIX: Call the unified endpoint ---
+            const { data } = await api.put('/api/users/complete-profile', formData);
+            setUser(data); // Update the global user state with the complete profile
             setSuccess('Profile updated successfully! Redirecting...');
             setTimeout(() => {
                 navigate('/profile');
             }, 1500);
         } catch (err) {
-            console.error('Error completing profile:', err.response?.data?.message || err.message);
-            setError(err.response?.data?.message || 'Failed to complete profile.');
+            const message = err.response?.data?.message || 'Failed to complete profile.';
+            setError(message);
+            console.error('Error completing profile:', message);
         }
     };
 
-    if (loading || (!user && !loading)) {
+    // Show a loading state until the user object is resolved and checked
+    if (loading || !user || (user && user.isProfileComplete)) {
         return <div className="auth-container">Loading...</div>;
-    }
-
-    if (!needsUsernameSetup) {
-        return <div className="auth-container">Your profile is already complete.</div>;
     }
 
     const missingFields = getMissingFields();
@@ -103,45 +94,15 @@ const CompleteProfilePage = () => {
                             <label htmlFor={field}>
                                 {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}:
                             </label>
-                            {field === 'bio' ? (
-                                <textarea
-                                    id={field}
-                                    name={field}
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    required
-                                    rows="4"
-                                />
-                            ) : field === 'graduationYear' ? (
-                                <input
-                                    type="number"
-                                    id={field}
-                                    name={field}
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    required
-                                    min="1900"
-                                    max="2100"
-                                />
-                            ) : field === 'phoneNumber' ? (
-                                <input
-                                    type="tel"
-                                    id={field}
-                                    name={field}
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            ) : (
-                                <input
-                                    type="text"
-                                    id={field}
-                                    name={field}
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            )}
+                            <input
+                                type={field === 'graduationYear' ? 'number' : field === 'phoneNumber' ? 'tel' : 'text'}
+                                id={field}
+                                name={field}
+                                value={formData[field] || ''}
+                                onChange={handleChange}
+                                required
+                                {...(field === 'graduationYear' && { min: "1900", max: "2100" })}
+                            />
                         </div>
                     ))}
                     <button type="submit" className="auth-submit-btn">Complete Profile</button>
@@ -151,4 +112,4 @@ const CompleteProfilePage = () => {
     );
 };
 
-export default CompleteProfilePage;
+export default CompleteProfileForm;

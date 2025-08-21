@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// --- Leveling Configuration (No changes) ---
 const getExpForLevel = (level) => {
     if (level <= 1) return 0;
     const BASE_EXP_INCREMENT = 100;
@@ -21,6 +22,7 @@ const getRankForLevel = (level) => {
     return 'BEGINNER';
 };
 
+// --- List of required fields (No changes) ---
 const REQUIRED_PROFILE_FIELDS = ['username', 'college', 'graduationYear', 'course', 'enrollmentNumber', 'phoneNumber', 'branch'];
 
 const UserSchema = new mongoose.Schema({
@@ -103,12 +105,14 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    // --- ‼️ CRITICAL FIX: Add `isProfileComplete` to the schema ---
     isProfileComplete: {
         type: Boolean,
         default: false,
     },
 }, { timestamps: true });
 
+// --- NEW METHOD TO CHECK PROFILE COMPLETION (No changes) ---
 UserSchema.methods.checkProfileCompletion = function() {
     return REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
 };
@@ -119,14 +123,15 @@ UserSchema.pre('save', async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     
-    if(this.isModified()){
-        this.isProfileComplete = this.checkProfileCompletion();
-    }
+    // --- ✅ IMPROVED LOGIC: Ensure the completion flag is always in sync with the data ---
+    this.isProfileComplete = this.checkProfileCompletion();
 
     next();
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {
+    // --- FIX: Added a check for users without a password (e.g., social logins) ---
+    if (!this.password) return false;
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
