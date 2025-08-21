@@ -7,6 +7,10 @@ const CompleteProfileForm = ({ setPageError }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        console.log(user)
+    },[])
+
     // Effect to handle redirection based on the user object's state
     useEffect(() => {
         // Only redirect if the user object exists and their profile is complete

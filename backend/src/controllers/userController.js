@@ -35,6 +35,18 @@ exports.registerUser = asyncHandler(async (req, res) => {
         email,
         password,
         username: username || null, // Allow username to be null initially
+        bio: '',
+        profilePicture: '',
+        role: 'user', // Default role
+        exp: 0,
+        level: 1,
+        rank: 'BEGINNER',
+        course:'',
+        enrollmentNumber: '',
+        phoneNumber: '',
+        branch: '',
+        college: '',
+        graduationYear: null,
         isProfileComplete: !!username, // Set true if username is provided
     });
 
@@ -170,47 +182,83 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/complete-profile
 // @access  Private
 exports.completeUserProfile = asyncHandler(async (req, res) => {
-    const { username } = req.body;
+    const userId = req.user._id;
+    const { username, college, graduationYear, course, enrollmentNumber, phoneNumber, branch } = req.body;
 
-    if (!username) {
-        res.status(400);
-        throw new Error('Username is required to complete profile.');
-    }
-
-    const user = await User.findById(req.user._id);
-
+    const user = await User.findById(userId);
     if (!user) {
         res.status(404);
-        throw new Error('User not found');
+        throw new Error('User not found.');
     }
 
-    if (user.username && user.isProfileComplete) {
+    // Object to hold the fields we are updating
+    const updateFields = {};
+
+    // Check and add each field to the update object if it's provided and not already set
+    if (username && (!user.username || user.username.trim() === '')) {
+        const usernameExists = await User.findOne({ username });
+        if (usernameExists) {
+            res.status(400);
+            throw new Error('Username already taken.');
+        }
+        updateFields.username = username;
+    }
+
+    if (college && (!user.college || user.college.trim() === '')) updateFields.college = college;
+    if (graduationYear && !user.graduationYear) updateFields.graduationYear = graduationYear;
+    if (course && (!user.course || user.course.trim() === '')) updateFields.course = course;
+    if (enrollmentNumber && (!user.enrollmentNumber || user.enrollmentNumber.trim() === '')) updateFields.enrollmentNumber = enrollmentNumber;
+    if (phoneNumber && (!user.phoneNumber || user.phoneNumber.trim() === '')) updateFields.phoneNumber = phoneNumber;
+    if (branch && (!user.branch || user.branch.trim() === '')) updateFields.branch = branch;
+
+    if (Object.keys(updateFields).length === 0) {
         res.status(400);
-        throw new Error('Profile already complete.');
+        throw new Error('No new information provided to update.');
     }
 
-    const usernameExists = await User.findOne({ username });
-    if (usernameExists) {
-        res.status(400);
-        throw new Error('Username already taken.');
+    // Use findByIdAndUpdate to perform the update
+    const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: true });
+
+    // Check if the profile is now complete after the update
+    const isProfileComplete = updatedUser.username && updatedUser.college && updatedUser.graduationYear && updatedUser.course && updatedUser.enrollmentNumber && updatedUser.phoneNumber && updatedUser.branch;
+    
+    // Only update the flag if the status has changed
+    if (isProfileComplete && !updatedUser.isProfileComplete) {
+        updatedUser.isProfileComplete = true;
+        await updatedUser.save();
     }
-
-    user.username = username;
-    user.isProfileComplete = true;
-
-    const updatedUser = await user.save();
 
     res.json({
-        _id: updatedUser._id,
-        username: updatedUser.username,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        exp: updatedUser.exp,
-        level: updatedUser.level,
-        rank: updatedUser.rank,
-        bio: updatedUser.bio,
-        profilePicture: updatedUser.profilePicture,
-        isProfileComplete: updatedUser.isProfileComplete,
+        message: 'Profile updated successfully!',
+        user: updatedUser,
         token: generateToken(updatedUser._id),
     });
+});
+
+// @desc    Set a user's role to admin (for initial admin setup)
+// @route   PUT /api/users/:id/set-admin
+// @access  Private (Admin only)
+exports.setAdmin = asyncHandler(async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            res.status(404);
+            throw new Error('User not found.');
+        }
+
+        if (user.role === 'admin') {
+            res.status(400);
+            throw new Error('User is already an admin.');
+        }
+
+        user.role = 'admin';
+        await user.save();
+
+        res.status(200).json({ message: `${user.username} is now an admin.`, user: { id: user._id, username: user.username, role: user.role } });
+
+    } catch (error) {
+        console.error('Error setting user as admin:', error);
+        res.status(500).json({ message: 'Server error setting user as admin.' });
+    }
 });
