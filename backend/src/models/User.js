@@ -95,7 +95,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         min: 1900,
         max: 2100,
-        default: null,
     },
     course: {
         type: String,
@@ -105,13 +104,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
         sparse: true,
-        default: null,
     },
     phoneNumber: {
         type: String,
         unique: true,
         sparse: true,
-        default: null,
     },
     branch: {
         type: String,
@@ -121,22 +118,32 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {
-    if (this.isModified('password') && this.password) {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-    }
-    
-    // --- UPDATED LOGIC FOR isProfileComplete ---
-    // A profile is considered complete only if ALL REQUIRED_PROFILE_FIELDS are present and have a value.
-    const isProfileFullyComplete = REQUIRED_PROFILE_FIELDS.every(field => this[field] && this[field] !== null && this[field] !== '');
-    if (this.isModified('isProfileComplete')) {
-      // The flag was explicitly changed, respect it.
-    } else {
-        this.isProfileComplete = isProfileFullyComplete;
-    }
-    // --- END UPDATED LOGIC ---
+    try {
+        // Hash password if modified
+        if (this.isModified('password') && this.password) {
+            const salt = await bcrypt.genSalt(10);
+            this.password = await bcrypt.hash(this.password, salt);
+        }
+        
+        // --- UPDATED LOGIC FOR isProfileComplete ---
+        // A profile is considered complete only if ALL REQUIRED_PROFILE_FIELDS are present and have a value.
+        const isProfileFullyComplete = REQUIRED_PROFILE_FIELDS.every(field => {
+            const value = this[field];
+            return value !== null && value !== undefined && value !== '';
+        });
+        
+        if (this.isModified('isProfileComplete')) {
+            // The flag was explicitly changed, respect it.
+        } else {
+            this.isProfileComplete = isProfileFullyComplete;
+        }
+        // --- END UPDATED LOGIC ---
 
-    next();
+        next();
+    } catch (error) {
+        console.error('Pre-save hook error:', error);
+        next(error);
+    }
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {

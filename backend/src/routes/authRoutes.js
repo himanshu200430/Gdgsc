@@ -47,7 +47,19 @@ router.post('/signup', async (req, res) => {
         });
     } catch (error) {
         console.error('Signup error:', error);
-        res.status(500).json({ message: 'Server error during registration' });
+        
+        // Handle specific MongoDB errors
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern)[0];
+            return res.status(400).json({ message: `${field} already exists` });
+        }
+        
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
+        
+        res.status(500).json({ message: 'Server error during registration', error: error.message });
     }
 });
 
@@ -95,13 +107,14 @@ router.get(
 router.get(
     '/google/callback',
     passport.authenticate('google', {
-        failureRedirect: process.env.FRONTEND_URL + '/login?error=google_failed',
+        failureRedirect: (process.env.NODE_ENV === 'production' ? process.env.PROD_FRONTEND_URL : process.env.DEV_FRONTEND_URL) + '/login?error=google_failed',
         session: false
     }),
     (req, res) => {
         // Successful authentication, redirect to frontend with token
+        const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_FRONTEND_URL : process.env.DEV_FRONTEND_URL;
         const token = generateToken(req.user._id, req.user.isProfileComplete);
-        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+        res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
     }
 );
 
@@ -119,13 +132,14 @@ router.get(
 router.get(
     '/discord/callback',
     passport.authenticate('discord', {
-        failureRedirect: process.env.FRONTEND_URL + '/login?error=discord_failed',
+        failureRedirect: (process.env.NODE_ENV === 'production' ? process.env.PROD_FRONTEND_URL : process.env.DEV_FRONTEND_URL) + '/login?error=discord_failed',
         session: false
     }),
     (req, res) => {
         // Successful authentication, redirect to frontend with token
+        const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.PROD_FRONTEND_URL : process.env.DEV_FRONTEND_URL;
         const token = generateToken(req.user._id, req.user.isProfileComplete);
-        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+        res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
     }
 );
 

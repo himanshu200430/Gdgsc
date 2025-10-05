@@ -35,7 +35,7 @@ const CompleteProfilePage = () => {
         <div className="auth-container" style={{marginTop:"140px",padding:"60px"}}>
             <div className="auth-form-card">
                 <h2>Complete Your Profile</h2>
-                <p>Welcome! Please choose a unique username to continue.</p>
+                <p>Welcome! Please fill in the required information to complete your profile.</p>
                 {pageError && <p className="error-message">{pageError}</p>}
                 <CompleteProfileForm setPageError={setPageError} />
             </div>

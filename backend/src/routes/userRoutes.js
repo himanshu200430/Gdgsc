@@ -36,15 +36,16 @@ router.get('/profile', protect, async (req, res) => {
 });
 
 // @route   PUT /api/user/profile
-// @desc    Update current user's profile (including bio, profile picture)
+// @desc    Update current user's profile (including bio, profile picture, and required fields)
 // @access  Private (requires JWT)
 router.put('/profile', protect, async (req, res) => {
-    const { username, bio, profilePicture } = req.body;
+    const { username, bio, profilePicture, college, graduationYear, course, enrollmentNumber, phoneNumber, branch } = req.body;
 
     try {
         const user = await User.findById(req.user._id);
 
         if (user) {
+            // Check username uniqueness if being changed
             if (username && username !== user.username) {
                 const usernameExists = await User.findOne({ username });
                 if (usernameExists && usernameExists._id.toString() !== user._id.toString()) {
@@ -53,8 +54,31 @@ router.put('/profile', protect, async (req, res) => {
                 user.username = username;
             }
 
+            // Check enrollmentNumber uniqueness if being changed
+            if (enrollmentNumber && enrollmentNumber !== user.enrollmentNumber) {
+                const enrollmentExists = await User.findOne({ enrollmentNumber });
+                if (enrollmentExists && enrollmentExists._id.toString() !== user._id.toString()) {
+                    return res.status(400).json({ message: 'Enrollment number already exists' });
+                }
+                user.enrollmentNumber = enrollmentNumber;
+            }
+
+            // Check phoneNumber uniqueness if being changed
+            if (phoneNumber && phoneNumber !== user.phoneNumber) {
+                const phoneExists = await User.findOne({ phoneNumber });
+                if (phoneExists && phoneExists._id.toString() !== user._id.toString()) {
+                    return res.status(400).json({ message: 'Phone number already exists' });
+                }
+                user.phoneNumber = phoneNumber;
+            }
+
+            // Update other fields
             user.bio = bio !== undefined ? bio : user.bio;
             user.profilePicture = profilePicture || user.profilePicture;
+            user.college = college !== undefined ? college : user.college;
+            user.graduationYear = graduationYear !== undefined ? graduationYear : user.graduationYear;
+            user.course = course !== undefined ? course : user.course;
+            user.branch = branch !== undefined ? branch : user.branch;
 
             const updatedUser = await user.save();
 
@@ -67,10 +91,16 @@ router.put('/profile', protect, async (req, res) => {
                     profilePicture: updatedUser.profilePicture,
                     bio: updatedUser.bio,
                     isProfileComplete: updatedUser.isProfileComplete,
-                    exp: updatedUser.exp,      // NEW
-                    level: updatedUser.level,  // NEW
-                    rank: updatedUser.rank,    // NEW
-                    role: updatedUser.role     // NEW
+                    college: updatedUser.college,
+                    graduationYear: updatedUser.graduationYear,
+                    course: updatedUser.course,
+                    enrollmentNumber: updatedUser.enrollmentNumber,
+                    phoneNumber: updatedUser.phoneNumber,
+                    branch: updatedUser.branch,
+                    exp: updatedUser.exp,
+                    level: updatedUser.level,
+                    rank: updatedUser.rank,
+                    role: updatedUser.role
                 }
             });
         } else {
@@ -78,6 +108,13 @@ router.put('/profile', protect, async (req, res) => {
         }
     } catch (error) {
         console.error('Error updating user profile:', error);
+        
+        // Handle MongoDB duplicate key errors
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern)[0];
+            return res.status(400).json({ message: `${field} already exists` });
+        }
+        
         res.status(500).json({ message: 'Server error updating profile' });
     }
 });
@@ -99,8 +136,15 @@ router.put('/set-username', protect, async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        if (!user.isProfileComplete && !user.googleId && !user.discordId) {
-             return res.status(403).json({ message: 'Username can only be set during initial social login setup.' });
+        // Only allow username change if:
+        // 1. User is from social login (googleId or discordId) and doesn't have username yet
+        // 2. OR user already has a username (shouldn't reach here normally)
+        if (user.username && (user.googleId || user.discordId)) {
+            return res.status(403).json({ message: 'Username is already set.' });
+        }
+        
+        if (!user.googleId && !user.discordId && user.username) {
+            return res.status(403).json({ message: 'Username can only be changed during initial social login setup.' });
         }
 
         const usernameExists = await User.findOne({ username });
