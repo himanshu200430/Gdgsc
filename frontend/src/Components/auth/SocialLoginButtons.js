@@ -2,11 +2,17 @@ import React from 'react';
 import './SocialLoginButtons.css';
 
 const SocialLoginButtons = () => {
-    // Environment-based API URL selection
-    const isProduction = process.env.REACT_APP_ENV === 'production';
+    // Auto-detect environment based on hostname
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const explicitEnv = process.env.REACT_APP_ENV;
+    
+    const isProduction = explicitEnv 
+        ? explicitEnv === 'production' 
+        : !isLocalhost;
+    
     const API_BASE_URL = isProduction 
-        ? process.env.REACT_APP_PROD_API_URL 
-        : process.env.REACT_APP_DEV_API_URL;
+        ? (process.env.REACT_APP_PROD_API_URL || 'https://gdgsc.onrender.com')
+        : (process.env.REACT_APP_DEV_API_URL || 'http://localhost:5000');
 
     const handleGoogleLogin = () => {
         window.location.href = `${API_BASE_URL}/api/auth/google`;

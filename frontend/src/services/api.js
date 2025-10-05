@@ -1,12 +1,21 @@
 import axios from 'axios';
 
-// Environment-based API URL selection
-const isProduction = process.env.REACT_APP_ENV === 'production';
-const API_BASE_URL = isProduction 
-    ? process.env.REACT_APP_PROD_API_URL 
-    : process.env.REACT_APP_DEV_API_URL;
+// Auto-detect environment based on hostname or use explicit env variable
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const explicitEnv = process.env.REACT_APP_ENV;
 
-console.log(`Frontend running in ${process.env.REACT_APP_ENV} mode`);
+// Determine if we're in production
+const isProduction = explicitEnv
+    ? explicitEnv === 'production'
+    : !isLocalhost;
+
+// Select API URL
+const API_BASE_URL = isProduction
+    ? (process.env.REACT_APP_PROD_API_URL || 'https://gdgsc.onrender.com')
+    : (process.env.REACT_APP_DEV_API_URL || 'http://localhost:5000');
+
+console.log(`Frontend running in ${isProduction ? 'production' : 'development'} mode`);
+console.log(`Hostname: ${window.location.hostname}`);
 console.log(`API Base URL: ${API_BASE_URL}`);
 
 const api = axios.create({
