@@ -12,6 +12,20 @@ const MongoStore = require('connect-mongo'); // To store sessions in MongoDB
 // Load environment variables
 dotenv.config({ path: './.env' }); // Make sure this path is correct
 
+// Environment-based configuration
+const isProduction = process.env.NODE_ENV === 'production';
+
+const config = {
+    frontendUrl: isProduction ? process.env.PROD_FRONTEND_URL : process.env.DEV_FRONTEND_URL,
+    backendUrl: isProduction ? process.env.PROD_BACKEND_URL : process.env.DEV_BACKEND_URL,
+    googleCallbackUrl: isProduction ? process.env.PROD_GOOGLE_CALLBACK_URL : process.env.DEV_GOOGLE_CALLBACK_URL,
+    discordCallbackUrl: isProduction ? process.env.PROD_DISCORD_CALLBACK_URL : process.env.DEV_DISCORD_CALLBACK_URL
+};
+
+console.log(`Running in ${process.env.NODE_ENV} mode`);
+console.log(`Frontend URL: ${config.frontendUrl}`);
+console.log(`Backend URL: ${config.backendUrl}`);
+
 // Passport config
 require('./src/config/passport')(passport);
 
@@ -22,7 +36,7 @@ const app = express();
 
 // CORS Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL, // Allow requests from your frontend
+    origin: config.frontendUrl, // Allow requests from your frontend
     credentials: true // Allow cookies/headers to be sent
 }));
 

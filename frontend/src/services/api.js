@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+// Environment-based API URL selection
+const isProduction = process.env.REACT_APP_ENV === 'production';
+const API_BASE_URL = isProduction 
+    ? process.env.REACT_APP_PROD_API_URL 
+    : process.env.REACT_APP_DEV_API_URL;
+
+console.log(`Frontend running in ${process.env.REACT_APP_ENV} mode`);
+console.log(`API Base URL: ${API_BASE_URL}`);
 
 const api = axios.create({
     baseURL: API_BASE_URL,

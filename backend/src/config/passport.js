@@ -53,11 +53,15 @@ module.exports = function(passport) {
     );
 
     // --- Google Strategy ---
+    const isProduction = process.env.NODE_ENV === 'production';
+    const googleCallbackUrl = isProduction ? process.env.PROD_GOOGLE_CALLBACK_URL : process.env.DEV_GOOGLE_CALLBACK_URL;
+    const discordCallbackUrl = isProduction ? process.env.PROD_DISCORD_CALLBACK_URL : process.env.DEV_DISCORD_CALLBACK_URL;
+
     passport.use(
         new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: '/api/auth/google/callback'
+            callbackURL: googleCallbackUrl
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -96,7 +100,7 @@ module.exports = function(passport) {
         new DiscordStrategy({
             clientID: process.env.DISCORD_CLIENT_ID,
             clientSecret: process.env.DISCORD_CLIENT_SECRET,
-            callbackURL: '/api/auth/discord/callback',
+            callbackURL: discordCallbackUrl,
             scope: ['identify', 'email']
         },
         async (accessToken, refreshToken, profile, done) => {
