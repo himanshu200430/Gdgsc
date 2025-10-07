@@ -11,7 +11,7 @@ const SocialLoginButtons = () => {
         : !isLocalhost;
     
     const API_BASE_URL = isProduction 
-        ? (process.env.REACT_APP_PROD_API_URL || 'https://gdgsc.onrender.com')
+        ? (process.env.REACT_APP_PROD_API_URL || 'https://gdgsc-33246d1cdab1.herokuapp.com')
         : (process.env.REACT_APP_DEV_API_URL || 'http://localhost:5000');
 
     const handleGoogleLogin = () => {

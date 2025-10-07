@@ -55,7 +55,7 @@ const EventsPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data } = await api.get(process.env.REACT_APP_API_URL+"/api/events");
+        const { data } = await api.get("/api/events");
         setEvents(data);
         setLoading(false);
       } catch (err) {
