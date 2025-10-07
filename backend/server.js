@@ -34,9 +34,23 @@ connectDB();
 
 const app = express();
 
-// CORS Middleware
+// CORS Middleware - Environment dependent
+const allowedOrigins = isProduction
+    ? [
+        'https://gdgsc.dev',
+        'https://www.gdgsc.dev',
+        config.frontendUrl, // Include the configured frontend URL
+        process.env.PROD_FRONTEND_URL // Include env variable for safety
+    ].filter(Boolean) // Remove any undefined values
+    : [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        config.frontendUrl, // Include the configured frontend URL
+        process.env.DEV_FRONTEND_URL // Include env variable for safety
+    ].filter(Boolean); // Remove any undefined values
+
 app.use(cors({
-    origin: config.frontendUrl, // Allow requests from your frontend
+    origin: allowedOrigins,
     credentials: true // Allow cookies/headers to be sent
 }));
 
