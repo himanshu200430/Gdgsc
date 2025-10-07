@@ -10,3 +10,6 @@ frontend/.env
 !**/.env.example
 !**/.env.production
 !**/.env.development
+
+# Deployment documentation with sensitive information
+DEPLOYMENT.md
