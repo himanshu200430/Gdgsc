@@ -5,6 +5,7 @@ import api from "../services/api";
 import "./EventsPage.css"; // Make sure this CSS file exists
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import StayTuned from "./StayTuned";
 
 // --- SYNCHRONIZED HELPER FUNCTION FOR LEVELING LOGIC ---
 // IMPORTANT: This function MUST exactly match the `getExpForLevel` function
@@ -113,6 +114,11 @@ const EventsPage = () => {
     return <div className="events-container error-message">{error}</div>;
   }
 
+  // If no events, show StayTuned page
+  if (events.length === 0) {
+    return <StayTuned />;
+  }
+
   return (
     <div className="events-container">
       <h1>Available Events</h1>
@@ -128,10 +134,8 @@ const EventsPage = () => {
         </div>
       )}
       <div className="events-list">
-        {events.length === 0 ? (
-          <div className="error-message">No active events found at the moment.</div>
-        ) : (
-          events.sort((a, b) => new Date(b.date) - new Date(a.date)).map((event, index) => {
+        {
+        events.sort((a, b) => new Date(b.date) - new Date(a.date)).map((event, index) => {
             // Array of character icons to cycle through
             const characterIcons = [
               "/assets/Arcade_characters/girl.png",
@@ -205,8 +209,7 @@ const EventsPage = () => {
                 </div>
               </div>
             );
-          })
-        )}
+          })}
       </div>
     </div>
   );
