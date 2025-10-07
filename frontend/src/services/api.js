@@ -19,7 +19,7 @@ console.log(`Hostname: ${window.location.hostname}`);
 console.log(`API Base URL: ${API_BASE_URL}`);
 
 const api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: API_BASE_URL || 'https://gdgsc-33246d1cdab1.herokuapp.com',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
