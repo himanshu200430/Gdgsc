@@ -44,7 +44,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/stay-tuned" onClick={closeMenu}>
+          <Link to="/gamepage" onClick={closeMenu}>
             GAMES
           </Link>
         </li>

@@ -15,6 +15,7 @@ import Home from "./Pages/Home";
 import AdminNavbar from "./Pages/AdminNavbar";
 import Gallery from "./Pages/gallery";
 import StayTuned from "./Pages/StayTuned";
+import Gamepage from "./Pages/Gamepage";
 
 const App = () => {
   return (
@@ -45,7 +46,7 @@ const MainRoutes = () => {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/stay-tuned" element={<StayTuned />} />
+        <Route path="/gamepage" element={<Gamepage/>} />
       </Routes>
     </>
   );
