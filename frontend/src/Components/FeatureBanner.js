@@ -5,7 +5,12 @@ import { useState } from 'react';
 
 
 
-const FeatureBanner = ({ categories, onCategorySelect, selectedGenre }) => {
+const FeatureBanner = ({ categories, onCategorySelect, selectedGenre, onSearchChange }) => {
+   const handleCategoryClick = (genre) => {
+    // When a genre is selected, clear the search bar to show only genre results
+    onSearchChange(''); 
+    onCategorySelect(genre);
+  };
  
   return (
     <section className="categories">
@@ -16,7 +21,7 @@ const FeatureBanner = ({ categories, onCategorySelect, selectedGenre }) => {
           <div key={category.id} className={`category-card ${
               selectedGenre === category.name ? 'is-selected' : ''
             }`}
-            onClick={() => onCategorySelect(category.name)}>
+            onClick={() => handleCategoryClick(category.name)}>
             <img src={category.image} alt={category.name} />
             <div className="category-overlay">
               <h3>{category.name}</h3>
@@ -27,7 +32,7 @@ const FeatureBanner = ({ categories, onCategorySelect, selectedGenre }) => {
           className={`category-card category-card--reset ${
             !selectedGenre ? 'is-selected is-selected--reset' : ''
           }`}
-          onClick={() => onCategorySelect(null)}
+          onClick={() => handleCategoryClick(null)}
         >
           <h3>SHOW ALL</h3>
         </div>

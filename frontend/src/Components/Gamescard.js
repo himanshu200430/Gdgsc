@@ -4,18 +4,16 @@ import { useMemo } from 'react';
 
 
 
-const Gamescard = ({ games, selectedGenre, onGameClick }) => {
-   const filteredGames = useMemo(() => {
-    if (!selectedGenre) {
-      return games;
-    }
-    const lowerSelectedGenre = selectedGenre.toLowerCase();
-    return games.filter(game => game.genre.toLowerCase() === lowerSelectedGenre);
-  }, [games, selectedGenre]);
+const Gamescard = ({ games, selectedGenre, onGameClick , searchQuery }) => {
+   const filteredGames = games;
   return (
      <section className="Games-avail">
       <div className='section-title'>
-        <h4 style={{ color: "#ffc400ff", fontFamily: "'Valorax', sans-serif" }}>{selectedGenre ? `${selectedGenre} Games` : 'All Available Games'}</h4>
+        <h4 style={{ color: "#ffc400ff", fontFamily: "'Valorax', sans-serif" }}>{searchQuery 
+            ? `Search Results for "${searchQuery}"`
+            : selectedGenre 
+              ? `${selectedGenre} Games` 
+              : 'All Available Games'}</h4>
       <div
         style={{
            width: "100%",
@@ -40,7 +38,12 @@ const Gamescard = ({ games, selectedGenre, onGameClick }) => {
         ):(
           <div className="no-games-message">
             <h3 className="no-games-title">No Games Found</h3>
-            <p className="no-games-main-text">Stay tuned! We'll be adding {selectedGenre} games soon.</p>
+            <p className="no-games-main-text">{searchQuery
+                ? `We couldn't find any games matching "${searchQuery}".`
+                : selectedGenre 
+                  ? `Stay tuned! We'll be adding ${selectedGenre} games soon.`
+                  : `No games are currently available.`
+              }</p>
             <p className="no-games-hint-text">Click "SHOW ALL" to view all games.</p>
           </div>
         )}

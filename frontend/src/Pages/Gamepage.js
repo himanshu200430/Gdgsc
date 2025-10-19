@@ -7,6 +7,7 @@ import Gamescard from '../Components/Gamescard'
 import {useState} from 'react'
 import { useCallback } from 'react'
 import GameDetailPage from '../Components/GameDetailPage'
+import {useMemo} from 'react'
 
 
 
@@ -92,7 +93,7 @@ const games = [
 const Gamepage = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [selectedGame, setSelectedGame] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const handleGameClick = useCallback((game) => {
     setSelectedGame(game);
     window.scrollTo(0, 0); 
@@ -104,8 +105,40 @@ const Gamepage = () => {
   }, []);
 
      const handleCategorySelect = (genre) => {
+        setSearchQuery('');
         setSelectedGenre(genre);
     };
+    const handleSearchChange = useCallback((query) => {
+    setSearchQuery(query);
+    // When the user starts searching, clear genre filter for better results
+    if (query.length > 0) {
+        setSelectedGenre(null); 
+    }
+  }, []);
+    const filteredGames = useMemo(() => {
+    let gamesToDisplay = games;
+
+    // 1. Filter by Genre (only apply if there is no search query)
+    if (selectedGenre && searchQuery.length === 0) {
+      const lowerSelectedGenre = selectedGenre.toLowerCase();
+      gamesToDisplay = gamesToDisplay.filter(game => 
+        game.genre.toLowerCase() === lowerSelectedGenre
+      );
+    }
+    if (searchQuery.length > 0) {
+        // When searching, clear genre selection for filtering clarity
+        setSelectedGenre(null); 
+        const lowerSearchQuery = searchQuery.toLowerCase();
+        
+        gamesToDisplay = games.filter(game =>
+            // Check if search query matches game title OR game description
+            game.title.toLowerCase().includes(lowerSearchQuery) ||
+            game.description.toLowerCase().includes(lowerSearchQuery)
+        );
+    }
+
+    return gamesToDisplay;
+  }, [games, selectedGenre, searchQuery]);
   return (
     
     <div className = 'game'> 
@@ -114,19 +147,27 @@ const Gamepage = () => {
           <GameDetailPage game={selectedGame} onBack={handleBackClick} showBackButton={!!selectedGame} />
         ) : (
          <>
-      <Header/>
+      <Header
+        searchQuery={searchQuery} // Pass the state
+        onSearchChange={handleSearchChange} // Pass the handler
+        />
        <main className="main-content">
-     
+         {searchQuery.length === 0 && (
         <Banner/>
-    
+         )}
+
+      {searchQuery.length === 0 && (
       <FeatureBanner
           categories={categories} 
           onCategorySelect={handleCategorySelect}
-          selectedGenre={selectedGenre}/>
-      <Gamescard
-          games={games} 
           selectedGenre={selectedGenre}
-          onGameClick={handleGameClick} />
+          onSearchChange={handleSearchChange}/>
+           )}
+      <Gamescard
+          games={filteredGames} 
+          selectedGenre={selectedGenre}
+          onGameClick={handleGameClick}
+          searchQuery={searchQuery} />
       </main>
           </>
           )
